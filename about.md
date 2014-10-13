@@ -13,6 +13,10 @@ An aspiring social entrepreneur; Max seeks growth in culture and society over ac
 afforded within a Bitcoin based economy. Currently he volunteers for the Bitcoin Association of Australia, filling the role of Treasurer on the committee. 
 His current primary interest is inter-chain distributed markets.
 
+#### Content
+
+All content is on GitHub: [https://github.com/xk-io/xk-io.github.io](https://github.com/xk-io/xk-io.github.io)
+
 #### Site
 
 This Jekyll theme was crafted with <3 by [John Otander](http://johnotander.com)
