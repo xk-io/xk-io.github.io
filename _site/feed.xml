@@ -1,0 +1,1003 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MaxKaye</title>
+    <description>A description</description>
+    <link>http://xk.io/</link>
+    <atom:link href="http://xk.io/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>Microchains</title>
+        <description>&lt;p&gt;The &lt;a href=&quot;https://www.youtube.com/watch?feature=player_detailpage&amp;amp;v=o6D8Up411dI#t=1756&quot;&gt;Ethereum devs&lt;/a&gt; have been mentioning microchains lately so I figured it was time to write up what my thoughts on this sort of thing have condensed into; they might differ from Gav Wood’s thoughts.&lt;/p&gt;
+
+&lt;p&gt;As a note, I didn’t coin the term microchain, though I’ve heard Gavin Wood use it (and Stephan Tual). I didn’t have a term and I think this is perfect.&lt;/p&gt;
+
+&lt;p&gt;The point of a microchain is to provide a shared scalable PoW ‘container’ - a chain meant for nothing else but wrapping data in a PoW. Typically this has been done in a roundabout way (see AuxPoW or Mastercoin/Counterparty) that requires a lot of data, and is not efficient for any ‘piggy-backing’ chains hanging off the main chain. This isn’t a huge issue; insofar as - in the case of AuxPoW - proofs just go from 80 bytes to ~500 bytes (unless you’re using P2Pool or Eligius then it’s a bunch more). This is because the whole chain from block hash to PoW must be included, which is &lt;code&gt;Hash(Header(MerkleTree(Coinbase(ScriptSig(BlockHash)))))&lt;/code&gt;. Ugh!&lt;/p&gt;
+
+&lt;p&gt;Additionally AuxPoW has a number of design flaws: using ‘chain-ids’ to dictate positions in merkle trees is just ugly. The point is to ensure uniqueness in the proof - that you can’t secretly include &lt;em&gt;two&lt;/em&gt; different block hashes (since data in a merkle tree can be hidden) and later launch a doublespend attack. It’s trivial to see that a merkle patricia tree (MPT) is the better solution here as key-uniqueness is guaranteed.&lt;/p&gt;
+
+&lt;p&gt;Another flaw is the indirect and bulky nature of the proofs as described above.&lt;/p&gt;
+
+&lt;p&gt;A further flaw is the reliance on a central chain: Namecoin will never exist without Bitcoin (or at least requires a hardfork) and necessitates the use of the Bitcoin chain. It would be nice to have a system of merged mining that is coin-agnostic (doesn’t favour Bitcoin, basically). Hardforks are bad, lets avoid them.&lt;/p&gt;
+
+&lt;p&gt;A related flaw is the dictation of data structure which favours bitcoin-forks. It introduces needless complexity for a ground-up chain to implement AuxPoW.&lt;/p&gt;
+
+&lt;p&gt;All in all, using AuxPoW has a lot of side effects, and it’d be nice to be able to avoid them.&lt;/p&gt;
+
+&lt;h2 id=&quot;basic-microchains&quot;&gt;Basic microchains&lt;/h2&gt;
+
+&lt;p&gt;These are minimum structures to fairly support merged mining and general data-inclusion.&lt;/p&gt;
+
+&lt;p&gt;(The code is written to be roughly compatible with &lt;a href=&quot;http://github.com/eudemonia-research/encodium&quot;&gt;Encodium&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;intra-chain-view&quot;&gt;Intra-chain view&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Block&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;branch&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MerklePatriciaBranch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;header&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BlockHeader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;transactions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Transactions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+ 
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;valid_proof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;calculate_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;genesis_hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;header_hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;header&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;inter-chain-view&quot;&gt;Inter-chain view&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MicrochainBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;MerklePatriciaTree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;KeyValuePair&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;GenesisHash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Hash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Definition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;proof_of_work&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tree&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;optimisations&quot;&gt;Optimisations&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Ensure genesis keys diverge as quickly as possible; Put a cap on proof length to avoid bloat for fun - putting two very similar keys can create a worst-case proof.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Change MicrochainBlock’s proof of work to: &lt;code&gt;def pow(self): return hash(self.tree.root + nonce)&lt;/code&gt; - this means we have O(1) updates to PoW whereas without this a k,v pair in the MPT must be altered, which is an O(log n) complexity update.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;more-complex-forms&quot;&gt;More complex forms&lt;/h2&gt;
+
+&lt;p&gt;There are a few more alterations I’ve been thinking of, especially:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Making microchains into a blockchain of their own (and the metadata is included in the tree like everything else - this metadata governs targets, difficulty, etc) which will aggregate mining power in a more formal manner. Additonally it means that a chain can just not worry about PoW, and simply take an authenticated list of hashes from the parent chain (for better or worse). And…&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Deregulating block frequency on merged chains and allowing the microchain to govern update frequency. Which ties into…&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Competition within the tree. By this I mean merged mining an additional chain incurs some cost, this drastically alters the incentive structures around attacking networks and merged mining (haven’t done the math yet to figure out if it even &lt;em&gt;can&lt;/em&gt; be benefcial).&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Those three points mean the microchain could support many merged chains, and their block frequencies would be governed by how often they are mined in the microchain (and lower frequency means higher reward per block), and with added competition that means they will reach an equilibrium which allows a direct measurement of percieved economic value. More detail another day.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 27 Aug 2014 00:00:00 +1000</pubDate>
+        <link>http://xk.io/2014/08/27/microchains/</link>
+        <guid isPermaLink="true">http://xk.io/2014/08/27/microchains/</guid>
+      </item>
+    
+      <item>
+        <title>A General Introduction to Marketcoin</title>
+        <description>&lt;p&gt;Originally published at &lt;a href=&quot;http://eudemonia.io/2014/04/a-general-introduction-to-marketcoin.html&quot;&gt;eudemonia.io&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Eleven months ago I started planning Marketcoin and since then I’ve not described the updated design.
+It has changed significantly since I first described it, and is far superior in many aspects.&lt;/p&gt;
+
+&lt;p&gt;Herein I’ll describe what Marketcoin is designed to do, sometimes with little or no justification to how it is achieved.
+The implementation is highly technical and does not belong in a general introduction.&lt;/p&gt;
+
+&lt;p&gt;Marketcoin is an idea that manifests in a novel fashion.
+It’s a bit like Bitcoin, and a bit like Mastercoin, and a bit like Ethereum, but also like none of them in many ways.
+It’s not any one single network, but many that are able to communicate and transfer value from chain to chain.
+They’re able to share a common unit of a consistent value across all chains supporting the correct standard.
+It is self pruning and selects on the most efficient markets, while still enabling diversity and innovation.
+It is a parallel cryptonet designed to span the Internet and enable trustless trade between both old and new chains.&lt;/p&gt;
+
+&lt;p&gt;Markets can be hosted anywhere, on any chain, but there will be a central hash rate source where most market-chains live by default, known as the Grachten.
+A market-chain may host many markets but the central unit is always common.
+This communal living is an important design decision for market-chains because it provides an environment where high quality markets can grow that have some level of mutual quality assurance due to their competitive environment.
+A high quality neighbourhood is important as chains will have to communicate to move the central unit between them; remember that confidence in the chain is inversely proportional to required confirmations, so less secure chains will naturally be slower to interact with their peers.
+Just as Namecoin is merge-mined with Bitcoin, market-chains can be merge-mined with the Grachten.
+Unlike the Namecoin / Bitcoin relationship, though, the Grachten has limited space, and it becomes more and more difficult to produce blocks as a miner attempts to include more data.
+For this reason cryptographic authentication is deferred to the Grachten, providing a competitive environment where market-chains can prove their efficiency.
+The more coins stored on that chain the higher the block reward is, increasing the incentive for a miner to mine that chain.
+Two chains competing for the same currency pair will each hinder the efforts of the other, so once one gains a majority the weaker will atrophy until it is discarded.&lt;/p&gt;
+
+&lt;p&gt;The main idea of Marketcoin is to provide a fair and unbiased market on which to trade various cryptocurrency and other smart properties.
+In the same way a human watches the Bitcoin blockchain to wait for payment, Marketcoin watches the Bitcoin blockchain to confirm trades.
+Since there is some internal unit and an external unit, it is conceptually easy to see that an exchange can take place.&lt;/p&gt;
+
+&lt;p&gt;The actual market design used in a market-chain can be of the community’s choosing, however, a blockchain provides unique challenges that traditional market structures do not neatly fit.
+The proof of concept (PoC) due out in the near future will demonstrate a design based on a modified call market.
+Since orders must be inserted into the order book whether they are executed immediately or not, no distinction is made between orders waiting in the order book and orders made immediately.
+Due to the near perfect-information state of cryptonets, it’s likely a market will react to an order before it is executed - helping to create liquidity and competition around every trade.&lt;/p&gt;
+
+&lt;p&gt;A typical market-chain will experience the following phenomena:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Every minute or two a market update will be produced, solidifying orders still floating around the network and helping to prevent manipulation on the part of miners - orders are added to the order-book but not executed.&lt;/li&gt;
+  &lt;li&gt;Every 15 minutes or so the market will execute, clearing all overlapping trades.
+This aspect is similar to a call market.
+Part of the design requires that this cannot be predicted.&lt;/li&gt;
+  &lt;li&gt;Orders will be prioritised in terms of how good a ‘deal’ they are.
+A user wishing to sell the central unit for very little, or buy at a high price will be preferenced over a user who is less generous in their offer.&lt;/li&gt;
+  &lt;li&gt;The highest bid is matched with the lowest ask, and the price of the trade is decided to be the average of the two offers.
+One or both of the trades is consumed fully and the remainder is added to the top of the respective order-book.&lt;/li&gt;
+  &lt;li&gt;This continues until there is no overlap between bids and asks.&lt;/li&gt;
+  &lt;li&gt;As a consequence there is no longer a spread in the market, but an uncertainty in the price appears instead.
+(During simulations this was ~0.3% at a maximum, and usually less; since this is less than or on par with most exchange fees it’s counted as negligible.
+As liquidity rises this error will fall, except in times of volatility.)&lt;/li&gt;
+  &lt;li&gt;Furthermore, a large trade at a good price will generate a lot of interest, and the potential of profit will cause traders to actively compete for a slice of the trade.&lt;/li&gt;
+  &lt;li&gt;To compete traders must make a generous offer in the other direction, and so their competition benefits the market as a whole, both by increasing liquidity and by helping to maintain price stability.&lt;/li&gt;
+  &lt;li&gt;Due to the uncertainty of the market, it is possible to have two opposing trades in the same execution and make a profit (it is also possible to make a loss).
+Whether this is an advantage or disadvantage is relative to the user in question.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There is a possibility of miners using their power to manipulate the orderbook slightly in their favour before offering a block, however, execution is always at the beginning of a block ensuring only existing orders are executed, preventing too much manipulation on the part of a miner.
+They can, however, manipulate the orderbook very slightly with every block they produce, so that if the next block happens to invoke an execution they will be slightly advantaged.
+By analogy, this is the high frequency trading of Marketcoin - both are simply having a say when it most counts.&lt;/p&gt;
+
+&lt;p&gt;It should be evident at this point that novel market structures are easily implemented under Marketcoin, allowing the most efficient and desired market structure to emerge.
+This is an excellent example of the neutrality of Marketcoin’s design.&lt;/p&gt;
+
+&lt;p&gt;While one market-chain may only support a few currency pairs (more may prove too cumbersome), other market-chains are easy to create and can maintain a two-way peg with the central unit provided a standard is followed.
+This standard dictates a few aspects important to the network.
+For example, the rate of central unit generation as a block reward should be proportional to the number of central units stored on that chain and inversely proportional to the block frequency of that chain.
+Since market-chains are designed to coexist on shared hashing power they have a natural resilience to changes in block production times, and the reward adjusts accordingly.&lt;/p&gt;
+
+&lt;p&gt;Creating a new market-chain will be extremely accessible (we’re going to provide a library) but maintaining one is very costly (you have to convince people to mine it in a competitive environment).
+Because of this combination, I anticipate there will be a great evolutionary synergy, whereby there is no central Marketcoin chain and the central unit exists between many chains, abandoning them as they become insignificant and jumping on those that prove useful, novel, or advantageous.
+The unit of value will be extricated from the confines of just one blockchain, allowing for innovation not just in market structure but blockchain technology - all without needing hard-forks.&lt;/p&gt;
+
+&lt;p&gt;Marketcoin is designed to be &lt;em&gt;the&lt;/em&gt; solution to distributed exchange: from an ethical launch to evolutionary agility, we want to cover every base to ensure the longevity of such an ambitious project.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 14 Apr 2014 10:00:00 +1000</pubDate>
+        <link>http://xk.io/marketcoin/grachten/2014/04/14/a-general-introduction-to-marketcoin/</link>
+        <guid isPermaLink="true">http://xk.io/marketcoin/grachten/2014/04/14/a-general-introduction-to-marketcoin/</guid>
+      </item>
+    
+      <item>
+        <title>Efficient Reorgs on Cryptonets</title>
+        <description>&lt;p&gt;Every &lt;a href=&quot;https://xk.io/glos/pow&quot;&gt;PoW&lt;/a&gt; driven cryptonet has a state. The state of Bitcoin (and forks) is the particular
+set of Unspent Transaction Outputs (UTXOs) at the time - essentially the set of all Bitcoin 
+able to be spent.&lt;/p&gt;
+
+&lt;p&gt;When a new block arrives, the usual process to update the state is simple:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Start with S[n,0] (state at block n)
+Apply the first transaction from the new block (B[0]) to S
+
+S[n,k] + B[k] -&amp;gt; S[n,k+1] for all k in B
+
+S[n+1,0] = S[n,max(k)+1]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;However, what happens when a new block arrives causing a &lt;a href=&quot;https://xk.io/glos/reorg&quot;&gt;reorganisation&lt;/a&gt; of the main chain?&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;.       3a← 4a    &amp;lt;-- 3a and 4a are not in the main chain currently
+      ↙ 
+1 ← 2 ← 3 ← 4     &amp;lt;-- 3 and 4 are in the main chain
+
+&amp;gt; 5a arrives, causing the reorg:
+
+1 ← 2 ← 3a← 4a← 5a   &amp;lt;-- New main chain
+      ↖
+        3 ← 4        &amp;lt;-- Old main chain, 3 and 4 no longer in the main chain
+        
+In this case block #2 was the lowest common ancestor (a pivot point)
+of the two competing chains 3a-&amp;gt;5a and 3-&amp;gt;4.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;the-problem-of-reorgs&quot;&gt;The problem of reorgs&lt;/h2&gt;
+
+&lt;p&gt;Let’s presume the distance from the &lt;a href=&quot;https://xk.io/glos/lca&quot;&gt;lowest common ancestor&lt;/a&gt; (LCA) and the new head is &lt;code&gt;n&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Bitcoin et al solve the issue by stepping backwards through time.&lt;/p&gt;
+
+&lt;p&gt;Since Bitcoin transactions spend outputs, and outputs may be spent only once, playing the
+blockchain backwards is trivial:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;for each transaction:
+	remove it&amp;#39;s outputs from the list of UTXOs.
+	add the outputs it spends to the list of UTXOs.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And bam! You can then play time forward from the LCA to calculate the new state. How nice.&lt;/p&gt;
+
+&lt;p&gt;What happens, though, when we move to a cryptonet that only operates on balances and doesn’t
+use the input/output system of Bitcoin?&lt;/p&gt;
+
+&lt;p&gt;Well, provided we’re recording every transaction it’s quite simple. A transaction moving
+&lt;code&gt;X&lt;/code&gt; coins from &lt;code&gt;A&lt;/code&gt; to &lt;code&gt;B&lt;/code&gt; results in &lt;code&gt;A-=X&lt;/code&gt; and &lt;code&gt;B+=X&lt;/code&gt;. That is trivial to reverse. However, the 
+caveat is that we must record every transaction. Once we start including complex mechanisms
+within the protocol that produce transactions that are not recorded but simply implied, we 
+can no longer play time ‘backwards’ as &lt;code&gt;S[m]&lt;/code&gt; depends on &lt;code&gt;S[m-1]&lt;/code&gt; and without knowing &lt;code&gt;S[m-1]&lt;/code&gt; to 
+calculate the implied transactions, we can’t play time backwards. Of course, if we know &lt;code&gt;S[m-1]&lt;/code&gt; 
+we don’t need to do any of this anyway, so we’re sort of stuck. 
+Examples of this sort of mechanism can be found in the way contracts create
+transactions in Ethereum and the market evaluation in Marketcoin.&lt;/p&gt;
+
+&lt;p&gt;Remembering &lt;code&gt;S[m-1]&lt;/code&gt; is easy but what if the reorg is of length 2, or 3, or 10? We can’t just
+remember &lt;em&gt;all&lt;/em&gt; the states.&lt;/p&gt;
+
+&lt;p&gt;So, we can see that we have a problem.&lt;/p&gt;
+
+&lt;h2 id=&quot;efficiently-remembering-states&quot;&gt;Efficiently remembering states&lt;/h2&gt;
+
+&lt;p&gt;The intuitive solution (to me, at least) is to know &lt;em&gt;some&lt;/em&gt; but not all states at strategic
+intervals between the genesis block and the current head. When a reorg of length &lt;code&gt;n&lt;/code&gt; 
+occurs, the network has already committed to evaluating &lt;code&gt;n&lt;/code&gt; new states. I define ‘efficient’
+here to mean evaluating no more than &lt;code&gt;2n&lt;/code&gt; new states (in the worst case). Unfortunately, 
+this means we’ll need to remember about &lt;code&gt;2*log(2,h)&lt;/code&gt; states, where &lt;code&gt;h&lt;/code&gt; is the height of the
+chain head. All the UTXOs in Bitcoin take up a few hundred meg of RAM, so for 500,000 blocks
+we’re looking at no more than 40 states, but that’s still ~10 GB of space (by Bitcoin’s 
+standards) which isn’t ideal. It’s unlikely that we’ll see long reorganisations, but we’d still
+be storing half of the figures mentioned above, which, while better, isn’t perfect.&lt;/p&gt;
+
+&lt;p&gt;One solution may be to record the net implied change of state as the last transaction,
+but that solution might be more painful than the cure, and requires introducing extra
+complexity into the network architecture, which I’m against, so we won’t consider
+this option here.&lt;/p&gt;
+
+&lt;p&gt;In addition to the above constraint on ‘efficient’, we also require that for each block
+building on the main chain we should only have to calculate one new state (the updated
+current state). This implies that when we step through the blockchain, we only ever
+forget cached states, with the exception of the new state produced by the next block.&lt;/p&gt;
+
+&lt;p&gt;Somewhat-formally:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Current head is of height n.
+
+A[n] = {cached states at height n}
+
+Block n+1 arrives:
+
+assert A[n] is a superset of {all a in A[n+1] s.t. a is not of height n+1}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Thus &lt;code&gt;A[n+1]&lt;/code&gt; can be described as the set of some or all of the states in &lt;code&gt;A[n]&lt;/code&gt; and
+the state at &lt;code&gt;n+1&lt;/code&gt;, and therefore our collection of states does
+not requrie regeneration on each new block.&lt;/p&gt;
+
+&lt;p&gt;I propose a solution below that has a number of desired properties:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A reorg of length &lt;code&gt;n&lt;/code&gt; requires computing no more than &lt;code&gt;2n&lt;/code&gt; states&lt;/li&gt;
+  &lt;li&gt;Space efficient: &lt;code&gt;k&lt;/code&gt; states saved where &lt;code&gt;ld(h) &amp;lt;= k &amp;lt;= 2*ld(h)&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Incremental: only one new state has to be calculated for each new block&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Initial conditions:
+- Reorg length: n
+- Current height: h &amp;gt;= 3
+- i = 0; i &amp;lt; h
+
+2^k &amp;lt; h - i &amp;lt;= 2^(k+1) is always the case for some k
+if h-i == 2: set k to 1. (it would otherwise be 0)
+
+After finding k, and while h-i &amp;gt; 1:
+1. Cache states at height i + 2^k and i + 2^(k-1).
+2. i += 2^(k-1)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;and in python: (testing all combinations up to 2^13)&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;math&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;states&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;newStates&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;c&quot;&gt;# find largest k s.t. 2^k &amp;lt; h&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;newStates&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;newStates&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;ts1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;states&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# temp set for testing superset requirement&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;ts1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# add the current state (instead of removing it from newStates)&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;assert&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ts1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newStates&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# ts1 is a superset of newStates&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newStates&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# temp list just to print&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;states&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newStates&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Because of the ~log(n) space requirement a very fast block time is not a major concern.
+A chain with a target time of 1 minute requires about 1.5x the storage capacity of an
+equivelant chain with a target time of 10 minutes in the first year, and this ratio
+rapidly approaches 1 in the following years.&lt;/p&gt;
+
+&lt;p&gt;That said, after the first year with a 1 minute block time, we’d be storing around 30 states.
+If we ignored all states more than 2000 blocks deep (a day and a bit) we’re still storing more
+than 15, which isn’t a particularly great optimisation. (When we have events like the
+&lt;a href=&quot;https://bitcoin.org/en/alert/2013-03-11-chain-fork&quot;&gt;Fork of March 2013&lt;/a&gt; we would like clients
+to adjust quickly and efficiently).&lt;/p&gt;
+
+&lt;p&gt;I have some ideas about state-deltas to try and solve this issue (which is 
+ungood, but not doubleplusungood) but that can wait for a future post.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 02 Apr 2014 00:00:00 +1100</pubDate>
+        <link>http://xk.io/state/reorg/cryptonet/marketcoin/2014/04/02/efficient-reorgs-on-state-based-cryptonets/</link>
+        <guid isPermaLink="true">http://xk.io/state/reorg/cryptonet/marketcoin/2014/04/02/efficient-reorgs-on-state-based-cryptonets/</guid>
+      </item>
+    
+      <item>
+        <title>How to Secure a Blockchain with Zero Energy</title>
+        <description>&lt;p&gt;Originally published in the &lt;a href=&quot;http://bitcoinmagazine.com/9317/how-to-secure-a-blockchain-with-zero-energy/&quot;&gt;Bitcoin Magazine&lt;/a&gt; on January 15th, 2014. Reposted here on 1st April, 2014.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.bitcoin.it/wiki/Proof_of_Work&quot;&gt;Proof of Work&lt;/a&gt; (PoW) is the only external method of powering the distributed consensus engine known as a blockchain. However, at least two alternatives have been proposed, and both are &lt;em&gt;internal&lt;/em&gt; to the network (Proof of Stake (PoS), and Proof of Burn (PoB)). This is important as it uses virtual resources obtained within the network as a substitute for PoW, meaning they these methods consume virtually no energy, which has &lt;a href=&quot;http://bitcoinmagazine.com/8994/determining-electrical-cost-bitcoin-mining/&quot;&gt;been a&lt;/a&gt; &lt;a href=&quot;http://www.bitcarbon.org/introduction.html&quot;&gt;concern&lt;/a&gt; of late. The figures suggested will only occur in a system of absolute equilibrium (the market is saturated with the most efficient ASICs that are possible to produce), though even if the reality is one or two orders of magnitude lower than predicted, it is still alarming and still must be addressed. &lt;/p&gt;
+
+&lt;h2 id=&quot;proof-of-stake-and-proof-of-burn&quot;&gt;Proof of Stake and Proof of Burn&lt;/h2&gt;
+
+&lt;p&gt;Both PoS and PoB use similar mechanisms. The auditor makes a sacrifice - in the case of PoS it is &lt;a href=&quot;http://bitcoin.stackexchange.com/questions/845/what-are-bitcoin-days-destroyed&quot;&gt;coindays&lt;/a&gt; (which are difficult to acquire; also a good &lt;a href=&quot;https://bitcointalk.org/index.php?topic=6172.msg90789#msg90789&quot;&gt;measure of economic activity&lt;/a&gt;), and in the case of PoB it is coins themselves (which are also difficult to acquire). Ultimately, any Proof of {something} must require a cost, whether that be electricity, coin days, or coins themselves.&lt;/p&gt;
+
+&lt;p&gt;Herein I suggest a fourth method, very similar to how a term deposit works (in that dusty old banking system).&lt;/p&gt;
+
+&lt;h2 id=&quot;monetary-velocity-and-value-of-money&quot;&gt;Monetary Velocity and Value of Money&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&quot;http://en.wikipedia.org/wiki/Equation_of_exchange&quot;&gt;equation of exchange&lt;/a&gt; tells us that as velocity increases the price should decrease, and when prices decrease the value of each unit of currency increase - this is only the case &lt;em&gt;provided the monetary supply remains constant&lt;/em&gt;. In a late-stage currency we would expect a relatively low level of monetary inflation / deflation (as opposed to price inflation / deflation - an important distinction), so we’ll discard the concern of constant monetary supply.&lt;/p&gt;
+
+&lt;p&gt;In a &lt;a href=&quot;https://en.bitcoin.it/wiki/Proof_of_Stake&quot;&gt;Proof of Stake&lt;/a&gt; fuelled network one is required to hold currency for some time before it is able to be used to mint a block. Because it cannot be used in a transaction it is essentially removed from the monetary supply as it is unavailable for a period of time (not technically true because one can spend it up until it is used to mint a block, be the economic effect is the same either way in terms of velocity). Because the money supply will &lt;em&gt;effectively&lt;/em&gt; (but doesn’t actually) decrease, prices should also fall by a small amount. One can imagine the network saying “Here is a small reward for temporarily removing your coins from the supply and making us all a little more wealthy, &lt;em&gt;in addition to auditing and securing the network&lt;/em&gt;.” &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.bitcoin.it/wiki/Proof_of_burn&quot;&gt;Proof of Burn&lt;/a&gt; is used in a similar fashion: coins are destroyed in an unspendable transaction which is &lt;em&gt;not immediately obvious&lt;/em&gt; to the network (the author suggests using a &lt;a href=&quot;https://github.com/bitcoin/bips/blob/master/bip-0016.mediawiki&quot;&gt;P2SH&lt;/a&gt; address). At some later date this is revealed and used to create a block. The miner is then rewarded with new coins and/or transactions fees (presumably more than the coins they’ve burned, else they’ve made a loss). This is like the network saying “Here’s a small reward for temporarily removing your coins from the supply and making us a little more wealthy, &lt;em&gt;in addition to auditing and securing the network&lt;/em&gt;”. Huh, that sounds familiar.&lt;/p&gt;
+
+&lt;p&gt;While they may sound very similar, there are a few differences in terms of public knowledge. In both cases it is unknown how many coins have been left waiting in the wings (similar to how it is impossible to tell how many bitcoins have been lost or abandoned over the years), though PoB provides a little more specificity allowing us to determine a narrower range of candidates (unspent P2SH addresses) than PoS (which includes all unspent transactions). The volume of coins in each case is also an indicator, as in both cases there will be some effective minimum required. However, PoB implies the number of coins burnt cannot be set in advance as both the date of redemption and volume of burnt coins are unknown. PoS does not destroy coins and so any extra volume of coindays destroyed is less important. These differences are subtle, but may become important as the systems are explored more deeply.&lt;/p&gt;
+
+&lt;p&gt;Economically speaking, the basis of both proofing systems relies on relinquishing the ability to use coins for some time. In PoS this is voluntary and the funds are spendable at any time, whereas in PoB uses a rather more permanent operation so the user commits immediately to mining a block in the future, regardless of whether it is profitable or not (provided they meet the difficulty requirement, else the coins may be lost forever; perhaps pooled mining might alleviate this concern, though), but the length of time till that utility will be used is unknown. In this case, as the ability to use coins is relinquished, there is no possibility they will increase monetary velocity and thus should (in theory) increase the value of the each coin in the total supply.&lt;/p&gt;
+
+&lt;h2 id=&quot;proof-of-deposit&quot;&gt;Proof of Deposit&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://bitcointalk.org/index.php?topic=386460.0&quot;&gt;Proof of Deposit&lt;/a&gt; (or PoD) fills a medium between the two methods. Simply put, PoD blocks have a difficulty proportional (or equal) to the amount of coins that must be offered for ‘deposit’ and have a known block reward. Deposited coins remain untouchable for some length of time and the block reward is delivered to the miner (either immediately or over a period of time like a dividend or interest payments). As there is one deposit per block there are a limited number of deposits available each year, and if deposits are appearing too fast then the return must be too high, so the difficulty is increased (which implies the return is lowered) and thus demand decreases.&lt;/p&gt;
+
+&lt;h3 id=&quot;attack&quot;&gt;Attack!&lt;/h3&gt;
+
+&lt;p&gt;There are important questions to be answered around the length of the deposit and the block reward, as these will have strong implications for the infamous 51% attack. That said, the same questions arise with PoS and PoB, though both have the advantage of requiring attacks to be &lt;em&gt;premeditated&lt;/em&gt; - there is some delay between when coins are committed by the miner and when the attack may be launched. PoD is vulnerable to impulsive attacks, but immediately following an attack, those responsible loose all monetary utility of any coins deposited for some considerable time.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 15 Jan 2014 00:00:00 +1100</pubDate>
+        <link>http://xk.io/2014/01/15/How-to-Secure-a-Blockchain-with-Zero-Energy/</link>
+        <guid isPermaLink="true">http://xk.io/2014/01/15/How-to-Secure-a-Blockchain-with-Zero-Energy/</guid>
+      </item>
+    
+      <item>
+        <title>Introducing Factum Exchange</title>
+        <description>&lt;h1 id=&quot;introducing-factum-exchange&quot;&gt;Introducing Factum Exchange&lt;/h1&gt;
+
+&lt;p&gt;In my &lt;a href=&quot;FactumMoney.md&quot;&gt;first post&lt;/a&gt; in the factum series I looked at Factum Money, a new category of money which has no non-financial use (or if there is a non-financial use, it is a distance second when ranked by utility), and has no extrinsic requirement to hold value. That is to say, the main utility of Factum Money is as money, and we can see this by looking at the properties of said money and &lt;em&gt;nothing more&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Commodity money and commodity backed money have common non-financial uses and often this is their primary use, and it is thus trivial to see they are not factum money. Fiat money (such as common government issued monies in use today) has no substantial non-financial use, however, by looking solely at the construction of fiat money we can see that it is not guaranteed to have a non-zero value. Most (if not all) of the time fiat money will acquire value through the exercise of authority, which almost ubiquitously takes a legal form.&lt;/p&gt;
+
+&lt;p&gt;Bitcoin, however, satisfies both requirements; it is a purely financial instrument (though it’s technical implementation leads to other uses, like storing data in the blockchain) &lt;em&gt;and&lt;/em&gt; one can see that Bitcoin has a non-zero (or should we say &lt;em&gt;intrinsic&lt;/em&gt;) value by a pure examination of the internal mechanism.&lt;/p&gt;
+
+&lt;h2 id=&quot;markets-and-exchange&quot;&gt;Markets and Exchange&lt;/h2&gt;
+
+&lt;p&gt;Money is a multidimensional problem. Sending value to other parties is all good and well, but there must exist a means of exchanging between monies; without One World Currency there will exist some merchants who won’t accept your preferred flavour of money and some clients who don’t have any of the flavours you accept.&lt;/p&gt;
+
+&lt;p&gt;Traditionally currencies are exchanged in an environment outside the system of money itself. They are walled off from the outside and require specific entry and exit procedures. These procedures are a method of deferring value (mentioned in the first in the factum series). Take the best known BTC/USD exchange: MtGox. The deposit process, for both USD and BTC, involves P1 (the first party) relinquishing their funds, and in return they are issued fungible tokens that operate within the MtGox environment, but are incompatible with any other payment network. These tokens have the unique property (belonging to none of their parents) of being exchangeable for other tokens (denominated in a different currency) on the market provided by MtGox. Thus tokens from P1 are swapped for tokens from P2 (the second party), and both parties direct the value back into their original forms, and the exchange is complete.&lt;/p&gt;
+
+&lt;p&gt;By issuing tokens for USD or BTC, MtGox are deferring the value. Put another way, the tokens only have value because of something we know about then outside of their construction: there is a legal gateway allowing value to flow into and out of the MtGox zone.&lt;/p&gt;
+
+&lt;p&gt;Because of the similarity in the constructions of tokens in these markets, and the construction of fiat money and commodity backed money, I feel it is appropriate to label these systems &lt;strong&gt;Fiat Exchanges&lt;/strong&gt;. Two forms of fiat money are being traded. No real BTC is traded on the MtGox exchange, only MtGox-BTC – a petty shadow by comparison.&lt;/p&gt;
+
+&lt;p&gt;There exists, however, another form of exchange. In this form the monies themselves are exchanged; not tokens in a segregated environment. When the two of us exchange gold coins for silver, the exchange takes place in an environment native to the subjects of the exchange (in this case the real world). A factum exchange that operates using Bitcoin would satisfy the same criterion; the exchange takes place in an environment native to the subjects of the exchange (the blockchain). Transactions on the Bitcoin network and transactions involved in the exchange are &lt;em&gt;one and the same&lt;/em&gt; (in this hypothetical exchange system).&lt;/p&gt;
+
+&lt;p&gt;These exchanges, whether they involve real world objects or cryptocurrencies, will be labelled &lt;strong&gt;Factum Exchanges&lt;/strong&gt;. In these cases, the ability for exchange to occur is built into the payment networks – in the case of gold it is the physical transfer, in the case of Bitcoin it is a transaction on the network. When a factum exchange operates over factum money (and possible some fiat money) there should be no possibility of any particular exchange being censored, blocked, regulated, etc. There should only be two possibilities: the exchange fails (and the original money is returned) or the exchange succeeds (and both parties swap as agreed).&lt;/p&gt;
+
+&lt;p&gt;It is possible to host a factum exchange over fiat currencies. An exchange in person, or through banking networks, can be called a factum exchange because value is not deferred from the subjects of the exchange.&lt;/p&gt;
+
+&lt;h3 id=&quot;a-note-on-cryptocurrencies&quot;&gt;A Note on Cryptocurrencies&lt;/h3&gt;
+
+&lt;p&gt;Although Bitcoin is a form of factum money, not all crypto currency needs to be. One can easily imagine a crypto currency minted by a central bank, and although mining might be decentralised, supply of the money is still regulated by the bank (even with distributed wealth generation). This would count as fiat currency because there is zero assurance (excepting legal agreements) that the currency won’t be inflated through the roof. If the private key were compromised this would be an inevitability.&lt;/p&gt;
+
+&lt;p&gt;Cryptocurrency could even be a form of commodity backed money, but we shan’t explore that here.&lt;/p&gt;
+
+&lt;h2 id=&quot;exchange-and-distributed-exchange&quot;&gt;Exchange and Distributed Exchange&lt;/h2&gt;
+
+&lt;p&gt;The Bitcoin community has felt the thorns of regulation for some time. Traditional methods of currency exchange are stifling growth and promoting unhealthy markets (such as we’re seeing in the exchange differential between USD/BTC markets on MtGox, Bitstamp, and BTC-e). The Bitcoin community owes it to itself to build tools to better allow for this exchange, and to investigate what is going wrong currently (so we know how and to build, and the purpose of such tools).&lt;/p&gt;
+
+&lt;p&gt;The current system looks like this: (using MtGox as an example)&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: USING MTGOX TO CONVERT BETWEEN BITCOIN AND USD
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__
+    BITCOIN 
+     P1–&amp;gt;MTG——-+                                +–MTG–&amp;gt;P2
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;|&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;
+    USD             |                                |
+     P2==&amp;gt;MTG—–+ |                                | +–MTG==&amp;gt;P1   (insert joke here
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;|&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;em&gt;|&lt;/em&gt;|&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__  about never get-
+                  | |                                | |              ting fiat out of
+                  | |                                | |              MtGox)
+    MTGOX         | |                                | |
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__|&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;em&gt;|&lt;/em&gt;|&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__
+                  | +-M&amp;gt;P1(BTC)—-#X-&amp;gt;P2(BTC)-D&amp;gt;MTG-+ |
+                  +—M&amp;gt;P2(USD)-#—X-&amp;gt;P1(USD)-D&amp;gt;MTG—+
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LEGEND
+-   : Path of Action, horizontal
+|   : Path of Action, vertical
++   : Path of Action, corner; if two paths intersect, their direction is unchanged
+.   : Path of Funds in Escrow
+&amp;gt;   : Transaction to
+#   : Order Placed
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+@   : Proof of Payment
+&amp;amp;   : Escrow Unlock
+=   : Stress on Path of Action (e.g. Regulation)
+M   : Mint coins/tokens
+D   : Destroy / Unmint
+
+Cn  : for an integer n, custom action, details provided with graph
+
+P1  : The First Party, always refers to the same people
+Pn  : for any integer n, as above
+En  : for any integer n, a special escrow account, details provided with graph
+PN  : The Nth Party, can be anyone and can be a different party every time
+ABC : Three letter abbreviation of a real world entity.
+
+RULES - The following excludes paths and transactions:
+- When two icons appear next to each other they are simultaneous. Their order 
+    preserves causality.
+- When two icons are in the same column they are simultaneous.
+- If two icons are in adjacent columns but different rows they are not 
+    necessarily simultaneous.
+- If two icons are adjacent and there is a third in a column shared with one of 
+    these icons, all three are simultaneous. ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The regulatory efforts are applied to the fiat entry and exit points, with = indicating where those stresses are felt. The MtGox infrastructure requires value to be deferred into compatible tokens, which is the choke point in this system. If direct person to person transactions in USD were used instead, the regulator pressure would fall away. Unfortunately this isn’t able to be checked from within the MtGox infrastructure, and thus relies on manual verification, in turn allowing for a number of attacks that make the system too burdensome to use.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-first-distributed-exchange-ripple&quot;&gt;The First Distributed Exchange: Ripple&lt;/h3&gt;
+
+&lt;p&gt;A system such as Ripple looks like this:&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: USING RIPPLE TO CONVERT BETWEEN BITCOIN AND USD
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__
+    BITCOIN 
+     P1–&amp;gt;BTS—+                                 +-BTS-&amp;gt;P2
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;|&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;em&gt;|&lt;/em&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__
+    USD         |                                 |
+     P2==&amp;gt;BTS-+ |                                 | +-BTS=&amp;gt;P1
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;em&gt;|&lt;/em&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;|&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;
+              | |                                 | |
+              | |                                 | |
+    RIPPLE    | |                                 | |
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__|&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;em&gt;|&lt;/em&gt;&lt;strong&gt;__&lt;/strong&gt;__
+              | +–M&amp;gt;P1(BTC)-#—-X&amp;gt;P2(BTC)-D&amp;gt;BTS-+ |
+              +—-M&amp;gt;P2(USD)—–#X&amp;gt;P1(USD)-D&amp;gt;BTS—+
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;em&gt;__&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+&amp;gt;   : Transaction to
+#   : Order Placed
+X   : Exchange Matched
+=   : Stress on Path of Action (e.g. Regulation)
+M   : Mint coins/tokens
+D   : Destroy / Unmint ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It is nearly identical to MtGox, and involves using a payment processor to cash in and out. Bitstamp (BTS) was chosen here as it is a ‘gateway’ into the Ripple system for both Bitcoin and USD. It can be replaced with any other gateway, though additional steps are required. Ultimately this provides no advantage over the traditional model (see MtGox, above) besides that there are more options to cash in and out (though you have to exchange Bitstamp-USD for OtherGateway-USD as the two aren’t fungible). I guess you’d say it’s better than MtGox, but not substantially.&lt;/p&gt;
+
+&lt;h3 id=&quot;cross-chain-trade&quot;&gt;Cross Chain Trade&lt;/h3&gt;
+
+&lt;p&gt;This algorithm is taken from the &lt;a href=&quot;https://en.bitcoin.it/wiki/Contracts&quot;&gt;Contracts&lt;/a&gt; page.&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: SIMPLE CROSS CHAIN TRADE BETWEEN BITCOIN AND LITECOIN
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;_
+    BITCOIN 
+     P1——X-&amp;gt;E1-•-C1——C2–&amp;gt;P2
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;
+    LITECOIN |
+     P2——X——–&amp;gt;E2-•-&amp;gt;P1
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;_&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+&amp;gt;   : Transaction to
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+
+E1 and E2 are both transactions to the following output:
+    &amp;lt;Pubkey&amp;gt; OP_CHECKSIGVERIFY OP_HASH256 &amp;lt;HashOfX&amp;gt; OP_EQUAL
+Redeemed by:
+    &amp;lt;X&amp;gt; &amp;lt;Sig&amp;gt;
+    
+C1 - P1 tells P2 about the transaction
+C2 - P1 tells P2 the secret (X) OR P1 spends the TX, making the secret public. ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Cross chain trade looks fairly simple, but in reality there is no market built behind it, so much of the communication is manual. This might be solved with some distributed layer over the top, but there is still the issue of P1 keeping X secret, locking funds away forever. There has been a suggested solution to this that involves timeout periods. This makes things a little more difficult:&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: ZERO-LOSS CROSS CHAIN TRADE BETWEEN BITCOIN AND LITECOIN
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;___
+    BITCOIN 
+     P1——X——C1——C3-&amp;gt;E1–C5–•-&amp;gt;P2
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;/&lt;/strong&gt;_&lt;strong&gt;&lt;em&gt;/___&lt;/em&gt;&lt;/strong&gt;/&lt;strong&gt;_&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;_
+    LITECOIN |    /    \  /    \  /    \
+     P2——X–C0——C2——C4-&amp;gt;E2—-•-&amp;gt;P1
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;_&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+&amp;gt;   : Transaction to
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+
+E1 and E2 are both transactions to the following output:
+    OP_IF 
+        &amp;lt;PubkeyYou&amp;gt; OP_CHECKSIGVERIFY OP_HASH256 &amp;lt;HashOfX&amp;gt; 
+        OP_EQUALVERIFY OP_HASH256 &amp;lt;HashOfY&amp;gt; OP_EQUAL 
+    OP_ELSE 
+        2 &amp;lt;PubkeyYou&amp;gt; &amp;lt;PubkeyMe&amp;gt; 2 OP_CHECKMULTISIG 
+    OP_ENDIF
+Redeemed by:
+    0 &amp;lt;Sig&amp;gt; &amp;lt;Sig&amp;gt; 
+        OR
+    1 &amp;lt;Y&amp;gt; &amp;lt;X&amp;gt; &amp;lt;Sig&amp;gt;
+    
+The flow of information between the Cn events are shown with slashes.
+C0 - P2 tells P1 &amp;lt;HashOfY&amp;gt;
+C1 - P1 telling P2 the E1 transaction, and &amp;lt;HashOfX&amp;gt;, unsigned, and providing 
+     a reversal transaction R1.
+    
+    * R1 is locked for 48 hours
+    * Rn is a reversal transaction from En&amp;gt;Pn. It has a lock time far in the future, 
+      and far from the time the lock time of the other reversal, if it is known.
+    
+C2 - P2 verifying E1, signing and returning R1, P2 also tells P1
+     about the E2 tx, unsigned, and provides R2.
+
+    * R2 is locked for 24 hours
+
+C3 - P1 verifies E2, inspects R2, signs, and returns. P1 signs R1 and 
+     signs and broadcasts E1.
+C4 - P2 verifies E1 has been broadcast, signs 
+     and broadcasts E2. P2 tells P1 &amp;lt;Y&amp;gt;
+C5 - P1 tells P2 &amp;lt;X&amp;gt;, either explicitly or by spending the transaction ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this case the trade will never fail: after R2 becomes active it is unsafe for P1 provide the secret X. Thus, if P1 is unable to redeem E2 she can wait for R1 become active. By placing the burden of providing the secret on P2, the transaction with the first reversal is guaranteed to occur first.&lt;/p&gt;
+
+&lt;p&gt;However, the cost of using this method is great; many confirmations are required for individuals to be certain they are safe executing the next step and there is a great deal of time for either party to renege on the transaction after the terms of exchange are set. Furthermore a reorganisation on one chain could lead to one party with both sides of the transaction.&lt;/p&gt;
+
+&lt;h3 id=&quot;other-distributed-fiat-exchanges-hypothetical&quot;&gt;Other Distributed Fiat Exchanges (Hypothetical)&lt;/h3&gt;
+
+&lt;p&gt;None of these have been completed to my knowledge. They typically allow the creation of assets backed by some value (fiat), or offered IPO style (possibly fiat or factum).&lt;/p&gt;
+
+&lt;p&gt;Typically, a generic fiat exchange (GFiX) will take the following form:&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: GENERIC FIAT EXCHANGE (GFiX) - BITCOIN TO USD
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;_
+    BITCOIN 
+     P1–&amp;gt;BTS—+                         +-BRK–&amp;gt;P2
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;|&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;_
+    USD         |                         |
+     P2==&amp;gt;BRK-+ |                         | +-BRK==&amp;gt;P1
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;em&gt;|&lt;/em&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;em&gt;|&lt;/em&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;_
+              | |                         | |
+              | |                         | |
+    GFiX      | |                         | |
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;em&gt;|&lt;/em&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;em&gt;|&lt;/em&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;___
+    BTC       | +-M&amp;gt;P1-#-•…•X&amp;amp;&amp;gt;P2-D&amp;gt;BRK-+ |
+              |               |             |      &lt;br /&gt;
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__|&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__
+    USD       |               |             |     &lt;br /&gt;
+              +—M&amp;gt;P2—•-#-•X&amp;gt;P1–D&amp;gt;BRK—+
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;em&gt;__&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+.   : Path of Funds in Escrow
+&amp;gt;   : Transaction to
+#   : Order Placed
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+&amp;amp;   : Escrow Unlock
+=   : Stress on Path of Action (e.g. Regulation)
+M   : Mint coins/tokens
+D   : Destroy / Unmint
+
+BRK : Broker ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;existing-and-future-factum-exchanges&quot;&gt;Existing and Future Factum Exchanges&lt;/h3&gt;
+
+&lt;h4 id=&quot;mastercoin&quot;&gt;Mastercoin&lt;/h4&gt;
+
+&lt;p&gt;Note: Marstercoin is a layer over Bitcoin (data stored in TXs on the Bitcoin network) and thus blocks occur at the same time.
+Note: The following may be incorrect. I’ve scraped together some information but details of the spec are pretty thin.&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: EXCHANGING BITCOIN FOR MASTERCOIN
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;_
+    BITCOIN 
+     P1———-C1#-•X–&amp;gt;P2 •
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;
+    MASTERCOIN        | &lt;br /&gt;
+     P2——–#—–•X……•&amp;amp;&amp;gt;P1
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;_&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C1 - Buyer selects order to fill
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;In english:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;An order is placed on the Mastercoin network (sell)&lt;/li&gt;
+  &lt;li&gt;A buyer finds and decides to fill that order (buy)&lt;/li&gt;
+  &lt;li&gt;They publish the order, and away the next block&lt;/li&gt;
+  &lt;li&gt;When the next block arrives the orders are matched and the Mastercoin asset goes into pseudo-escrow&lt;/li&gt;
+  &lt;li&gt;Once P1 pays P2 in the required specific manner, Mastercoin unlocks the escrow and transfers the assets to P1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;One issue is the buyer (of MSC) is able to renege on the trade before it is complete; this, however, is an issue with any asynchronous exchange. The process here is simpler than other asynchronous models because it is only possible to trade between Bitcoin and Mastercoin, and Mastercoin has interchain awareness to Bitcoin; when an order is filled (and paid for) the Mastercoin chain can release funds automagically. A ‘pledge’ system could easily be implemented to indicate one’s intent to purchase. A market system could be implemented to remove the need to choose an order to fill.&lt;/p&gt;
+
+&lt;h4 id=&quot;marketcoin&quot;&gt;Marketcoin&lt;/h4&gt;
+
+&lt;p&gt;Marketcoin is a hypothetical currency/market I’ve begun to set out &lt;a href=&quot;https://github.com/XertroV/MarketcoinWhitepaper&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: EXCHANGING BITCOIN FOR MARKETCOIN - ANNOTATED
+           ASYMMETRIC EXCHANGE
+                +– P1 places an order on the MKC network to buy (with pledge)
+                |    +– Exchange matched, unacknowledged on bitcoin network
+                |    |     +– P1 sends coins to P2 as agreed
+                |    |     |   +– BTC block mined
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;_
+    BITCOIN            +———+
+     P1———+—-X-+-P1&amp;gt;P2 • |
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;strong&gt;__|&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__
+    MARKETCOIN  #    |           @
+     P2—–#——-•X………….•&amp;amp;&amp;gt;P1
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;___
+            |        |           | +– When an MKC block is mined,
+            |        |           |     the MKC in escrow is released to P1
+            |        |           +– P1 provides proof of tx to MKC network
+            |        +– MKC Block produced, exchange matched
+            |            P2’s funds put in escrow   &lt;br /&gt;
+            +– P2 places an order on the MKC network to sell &lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;In english:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;P2 places bid&lt;/li&gt;
+  &lt;li&gt;P1 places ask (with pledge)&lt;/li&gt;
+  &lt;li&gt;When an MKC block is created and the orders are matched, P2’s MKC is put into escrow, redeemable by P1&lt;/li&gt;
+  &lt;li&gt;P1 then transfers correct amount of BTC to P2&lt;/li&gt;
+  &lt;li&gt;A Bitcoin block is mined including this transaction&lt;/li&gt;
+  &lt;li&gt;P1 provides proof of payment to the Marketcoin network&lt;/li&gt;
+  &lt;li&gt;When an MKC block is mined, the MKC in escrow is released to P1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Currently, P1 can technically renege on the trade before transacting to P2. However, the order P1 places on the Marketcoin network (this is one of many possible implementations) require a fee to be paid (in MKC) that is proportional to the change of value in the last 24 hours (as that is the escrow length). If the trade times out the pledge is given to P2, so P2 is guaranteed to either make the trade, or receive compensation better than the best case scenario considering the last 24 hours. That is a powerful incentive to trade. This requirement of pledges is not required in symmetric exchange. Proof of payment is another issue; it may be possible to automate this process with deep scanning of the foreign blockchain, but this could easily be too intensive a task, and requires marking transactions on the foreign chain. Manual proof of payment is sufficient at this stage, and with software automation, not a burden at all.&lt;/p&gt;
+
+&lt;h3 id=&quot;methods-of-operation-for-distributed-cross-chain-exchanges&quot;&gt;Methods of Operation for Distributed Cross-Chain Exchanges&lt;/h3&gt;
+
+&lt;h4 id=&quot;asymmetric-exchange&quot;&gt;Asymmetric Exchange&lt;/h4&gt;
+
+&lt;p&gt;As it stands, &lt;a href=&quot;https://github.com/XertroV/MarketcoinWhitepaper&quot;&gt;Marketcoin&lt;/a&gt; is asymmetric.&lt;/p&gt;
+
+&lt;p&gt;An asymmetric exchange has different rules on both sides. In the case of Marketcoin, it hosts the order book for both currencies, and Altcoin is unaware of it. This means asymmetric exchanges are backwards compatible (they can be made to ‘read’ a great many forms of blockchain), so a web between all currencies can be created with only asymmetric exchanges.&lt;/p&gt;
+
+&lt;p&gt;As mentioned before, the Marketcoin graph:&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: EXCHANGING BITCOIN FOR MARKETCOIN
+           ASYMMETRIC EXCHANGE
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;_
+    BITCOIN              +———+
+     P1———+——X-+-P1&amp;gt;P2 • |
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;|&lt;/strong&gt;&lt;strong&gt;__|&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__
+    MARKETCOIN  #      |           @
+     P2—–#———•X………….•&amp;amp;&amp;gt;P1
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;_____&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;Using Marketcoin to move between currencies other than Marketcoin is a little more of a burden as the process must be repeated:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+    TITLE: EXCHANGING BITCOIN FOR LITECOIN THROUGH MARKETCOIN
+           ASYMMETRIC EXCHANGE PASSTHROUGH
+    ___________________________________________________________________________
+    BITCOIN              +---------+
+     P1---------+------X-+-P1&amp;gt;P2 • |
+    ____________|______|___________|___________________________________________
+    MARKETCOIN  #      |           @       +--------#--•X.............•&amp;amp;&amp;gt;P3
+     P2-----#---------•X.............•&amp;amp;&amp;gt;P1-+  #         |           @
+    __________________________________________|_________|___________|__________
+    LITECOIN                                  |         | +---------+
+     P3---------------------------------------+---------X-+-P3&amp;gt;P1 •
+    ___________________________________________________________________________
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;An ideal asymmetric exchange built into two cryptocurrencies looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+    TITLE: EXCHANGING BITCOIN FOR LITECOIN ON AN IDEAL ASYMMETRIC EXCHANGE
+    ______________________________
+    XCOIN 
+     P1-----------#--•X&amp;gt;P2
+    __________________|___________
+    YCOIN             |  
+     P2--------#-•....X..•&amp;amp;&amp;gt;P1
+    ______________________________
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;What is important is this is the only way this could happen. Bitcoin hosts the exchange and Litecoin ‘reads’ the exchange from the Bitcoin blockchain. This is about half-way to a symmetric exchange where both coins have both functionalities. We explore this graph in more detail later on.&lt;/p&gt;
+
+&lt;h5 id=&quot;ignorant-and-knowledgable-asymmetric-exchange&quot;&gt;Ignorant and Knowledgable Asymmetric Exchange&lt;/h5&gt;
+
+&lt;p&gt;There is a clear difference between Marketcoin and an ideal asymmetric exchange. This is because in an ideal case, both chains have interchain awareness and can verify transactions on the other chain. In the case of Marketcoin and an existing cryptocurrency (say Bitcoin), the foreign coin is unable to read the local market (hosted entirely by Marketcoin). I call this ignorant asymmetric exchange, because Bitcoin is ignorant of the fact it is even occurring.&lt;/p&gt;
+
+&lt;p&gt;In the counter-case that a foreign chain &lt;em&gt;is&lt;/em&gt; aware of the local chain, we can offload buy orders to the foreign chain, which can then enable some escrow like function to guarantee trades are atomic. I call this knowledgable asymmetric exchange. However, to guarantee determinism in such an exchange, buy orders will only be matched once they are learnt about by the other chain, and can only be canceled with the permission of the other chain (they will either be cancelled or a trade will occur before the cancelation takes place).&lt;/p&gt;
+
+&lt;h4 id=&quot;combining-fiat-exchange-with-factum-asymmetric-exchange&quot;&gt;Combining Fiat Exchange with Factum Asymmetric Exchange&lt;/h4&gt;
+
+&lt;p&gt;Consider a distributed Generic Fiat Exchange (GFiX). Often such an exchange will have a core cryptocurrency operating beneath the user-defined assets (think Ripples, BitShares, Freicoins, etc) and so should be compatible with a distributed cryptocurrency exchange. Then presume this chain also supports ignorant asymmetric exchange. In such a case it would be possible to buy arbitrary assets on the GFiX using Bitcoin in a trustless, multistep manner. In the best case where Xcoin supports asymmetric cross-chain trade in a similar way to Marketcoin and an asset market, you would experience the following process:&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: EXCHANGING BITCOIN FOR XCOIN-ASSET THROUGH XCOIN
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;__
+    BITCOIN              +———+
+     P1———+——X-+-P1&amp;gt;P2 • |
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;strong&gt;__&lt;/strong&gt;|&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;em&gt;|&lt;/em&gt;&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;_
+    XCOIN       #      |           @
+     P2—–#———•X………….•&amp;amp;&amp;gt;P1—#-•X&amp;gt;P3    }
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__|&lt;/strong&gt;&lt;strong&gt;_  } Walled off Market
+    XCOIN-ASSET                                 |       }
+     P3———————————-#-•…•X&amp;amp;&amp;gt;P1   }
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;em&gt;__&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+.   : Path of Funds in Escrow
+&amp;gt;   : Transaction to
+#   : Order Placed
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+@   : Proof of Payment
+&amp;amp;   : Escrow Unlock ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&quot;symmetric-exchange&quot;&gt;Symmetric Exchange&lt;/h4&gt;
+
+&lt;p&gt;A symmetric exchange is one where both networks run identical rule sets. Each hosts one half of two exchanges - a ‘bid’ and an ‘ask’ order book. Consider MKC and XC, two crypto coins. In the case of MKC, the ‘ask’ order book is for XC/MKC (the MKC chain is authoritative) and the bid order book is for MKC/XC (the XC chain is authoritative). Likewise, the XC chain hosts an ‘ask’ order book for MKC/XC (XC chain authoritative), and a ‘bid’ order book for XC/MKC (MKC chain authoritative).&lt;/p&gt;
+
+&lt;p&gt;Technically this is equivalent to two knowledgable asymmetric exchanges running on both chains.&lt;/p&gt;
+
+&lt;h5 id=&quot;a-brief-explanation-of-one-possible-symmetric-exchange&quot;&gt;A ‘brief’ explanation of one possible symmetric exchange&lt;/h5&gt;
+
+&lt;p&gt;Each market’s deterministic execution is decided by the authoritative chain, based on best-effort updates shared between chains. &lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Side note:&lt;/em&gt; If you imagine a cryptocoin hosting 10 markets, not every market needs to be updated every block, in addition, preventing updates increases liquidity at the cost of transaction time. For fledgling, unpopular markets this may well be a positive thing, and evidence in favour of only including market updates for the markets you care about - after all, you’ll need to be running those clients. In addition, a very flexible update method such as this lends itself to better compatibility with block chains progressing at different rates.&lt;/p&gt;
+
+&lt;p&gt;These best effort updates relay specific information about both order books.&lt;/p&gt;
+
+&lt;p&gt;In the case of the ‘ask’ order book - the market the local coin has authority over - all known but excluded bid updates (from the foreign chain) are amalgamated into a chunk and deterministically matched against the ‘ask’ order book. The details of the trades made are recorded and packaged into a market update, which is then relayed back to the foreign blockchain in a best-effort fashion. Market updates are recorded in the merkel root (or a similar device) and secured in a chain so one can not be omitted. These are in turn recorded under the full block chain headers of the foreign chain. The deterministic matching happens over one market update. If a local block happens to contain three foreign market updates then all three are lumped and evaluated against the local order book deterministically. This leads to the fairest exchange between all parties concerned. The corresponding market update, when relayed back to the foreign blockchain, alerts the chain which cross-chain escrow transactions may be released and in what proportions (if there is a change address, for example).&lt;/p&gt;
+
+&lt;p&gt;In the case of the ‘bid’ order book - the market the local coin has no authority over - once orders are made the coins are locked and in escrow. All new or changed bid orders are added to the market update. After this update is recorded in the blockchain, in order to maintain foreign blockchain authority, if the user wishes to cancel the order they will have to wait for the foreign chain to recognise and acknowledge the request (one must broadcast a cancel message, record this in a market update, have the foreign coin register this in a market update, and then have the local blockchain recognise that it is finally safe to release the coins from escrow). During this time it is possible the order may be filled and the cancel message will fail.&lt;/p&gt;
+
+&lt;h5 id=&quot;overview&quot;&gt;Overview&lt;/h5&gt;
+
+&lt;p&gt;Let us examine an ideal distributed exchange which operates exclusively on cryptocurrencies; and the path of value (for a Bitcoin/Litecoin trade) looks like:&lt;/p&gt;
+
+&lt;p&gt;```
+    TITLE: EXCHANGING BITCOIN FOR LITECOIN ON AN IDEAL SYMMETRIC EXCHANGE
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;
+    BITCOIN 
+     P1———–#–•X&amp;gt;P2
+    &lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;|&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;___
+    LITECOIN          |&lt;br /&gt;
+     P2——–#-•….X..•&amp;amp;&amp;gt;P1
+    __&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;&lt;strong&gt;__&lt;/strong&gt;__&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;OR:
+______________________________
+BITCOIN 
+ P1--------#-•....X..•&amp;amp;&amp;gt;P2
+__________________|___________
+LITECOIN          |  
+ P2-----------#--•X&amp;gt;P1
+______________________________
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;That is to say, in the first case, an order is placed on the Litecoin network (ask for BTC or bid LTC) and recorded in a block. At some other point an order is placed on the Bitcoin network (bid BTC or ask LTC) which overlaps with the previous order on the other blockchain. When this second order is recorded in a block, it is known to have matched with the order on the Litecoin network (deterministically) and is automatically sent (or assigned) to the receiving party. At the next block on the Litecoin network the trade is learned of and the other transaction is performed so the Litecoins are transferred to the receiving party.&lt;/p&gt;
+
+&lt;p&gt;Moving form Xcoin to Zcoin through Ycoin - all of which support symmetric exchange:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+    TITLE: EXCHANGING XCOIN FOR YCOIN FOR ZCOIN
+           SYMMETRIC EXCHANGE PASSTHROUGH
+    ________________________________________
+    XCOIN 
+     P1-----------#--•X&amp;gt;P2
+    __________________|_____________________
+    YCOIN             |  
+     P2--------#-•....X..•&amp;amp;&amp;gt;P1-#-•X&amp;gt;P3
+    ______________________________|_________
+    ZCOIN                         |
+     P3-----------------#---•.....X..•&amp;amp;&amp;gt;P1
+    ________________________________________
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;By voting on which market updates to accept (from which other cryptocurrencies) and which markets to run, it will be possible to create a dynamic mesh of markets, forming many possible paths between any cryptocurrencies. (In the worst situation, a coin can run an asymmetric market and use that to trade into and out of foreign block chains.)&lt;/p&gt;
+
+&lt;h3 id=&quot;finding-efficiency&quot;&gt;Finding Efficiency&lt;/h3&gt;
+
+&lt;p&gt;Every novel technology developed will be hindered by regulation in a unique way. The ‘directness’ of transferring fiat to crypto is a worry for a number of people (the same people as are behind the steering wheel of regulation). They feel they need to remain insulated from the untested Bitcoin. Perhaps they would feel more comfortable with a bridging technology, such as a cryptocoin pegged to a parent currency, that just so happens to natively interact with a distributed market.&lt;/p&gt;
+
+&lt;p&gt;Lets have a look at that, shall we?&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+    TITLE: AUD -&amp;gt; CRYPTO-AUD -&amp;gt; BITCOIN
+    BANKING:
+    __________________________________________
+    AUD 
+     P1==&amp;gt;BRK---+                      +==&amp;gt;P2
+    ____________|______________________|______
+                |                      |
+    CRYPTO:     |                      |
+    ____________|______________________|______
+    CRYPTO-AUD  |                      |
+                +-M&amp;gt;P1--#-•X&amp;gt;P2--D&amp;gt;BRK-+                  
+    _______________________|__________________
+    BITCOIN                |         
+     P2------------#-•.....X...•&amp;amp;&amp;gt;P1                  
+    __________________________________________
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This, however, will likely not be the first iteration. It is elegant, quick, and efficient, but there are likely to be many sticking points before that can be realised. Firstly, Bitcoin doesn’t support knowledgeable asymmetric exchange, and there is a strong possibility that too much regulatory pressure will require CRYPTO-AUD to ship without an exchange. Therefore the &lt;em&gt;first&lt;/em&gt; iteration might look something a little more like:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+    TITLE: AUD -&amp;gt; CRYPTO-AUD -&amp;gt; MARKETCOIN -&amp;gt; BITCOIN
+    BANKING:
+    ______________________________________________________________________
+    AUD 
+     P1==&amp;gt;BRK---+                          +==&amp;gt;P2
+    ____________|__________________________|______________________________
+                |                          |
+    CRYPTO:     |                          |
+    ____________|__________________________|______________________________
+    CRYPTO-AUD  |                          |
+                +-M&amp;gt;P1--+--X-+-&amp;gt;P2-•-D&amp;gt;BRK-+                 
+    ____________________|__|_|____________________________________________
+    MARKETCOIN          #  | +---------@       +--#-•X.............•&amp;amp;&amp;gt;P3
+     P2------------#------•X.............•&amp;amp;&amp;gt;P1-+ #   |  +-------@          
+    _____________________________________________|___|__|_________________
+    BITCOIN                                      |   |  |
+     P3------------------------------------------+---X--+-&amp;gt;P1 •
+    ______________________________________________________________________
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Not as pretty. Compared to a our current fiat exchanges, this doesn’t look that appealing. That said, legally CRYPTO-AUD is far more comparable to a traditional payment processing system such as PayPal. By exploring the edge cases of regulation we can help find the inconsistencies and assist its evolution. An attack on Bitcoin by a Government will necessarily involve shutting down the flow of fiat into Bitcoin as much as possible. One strategy is to create useful technologies that are too similar to existing tech (PayPal, Visa) so we can stand on some very resilient legal precedents and standards if these systems are challenged. These middle ground crypto networks, then, cannot be made illegal without negatively effecting the current corporate monopoly because they are designed to resemble them so much. Whether that’s possible is another matter.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusions&quot;&gt;Conclusions&lt;/h2&gt;
+
+&lt;p&gt;We know that regulatory pressure can be applied to restrict a flow of Dollars/Yen/Euros anywhere. While this investigation into distributed exchange didn’t identify how to expunge regulatory pressure, it did yield at least one other method of allowing value to move from Fiat to Bitcoin: distributed cross-chain markets for cryptocurrency. By building a PayPal-like network built on Bitcoin and minted/destroyed in the same fashion as PayPal (deposit -&amp;gt; mint, withdraw -&amp;gt; destroy). Ultimately some legal entity must be responsible for the cash-in/out process, but this can now safely be entertained without needing to worry about the regulation surrounding running an exchange - provided there is a cross-chain market out there already.&lt;/p&gt;
+
+&lt;p&gt;In addition to this, we’ve looked at the minimum ideal for a market and found that it is readily achievable with knowledgable asymmetric exchange (better yet, symmetric exchange). We’ve briefly looked at one way this can be achieved, providing a fast, resilient, cross-chain market that operates as a close to perfect market. We have not investigated this suggestion deeply, though (don’t worry, that’s coming soon). By extrapolating this across all coins (or even just a few) we can see an interconnected web of markets bridging the gaps between chains.&lt;/p&gt;
+
+&lt;h2 id=&quot;where-to&quot;&gt;Where To?&lt;/h2&gt;
+
+&lt;p&gt;For cryptocurrency to succeed a distributed exchange must be developed linking them together. By leveraging interchain awareness we can build factum exchanges that operate in the domain of the currency itself. Atomic exchange that is intwined in cryptocurrency is a strong motivator for adoption, and by creating a web of markets the canonical boundaries between *coins will be removed.&lt;/p&gt;
+
+&lt;p&gt;Efficient atomic cross chain trade is a necessity for the long term viability of cryptocurrency. Using an asymmetric exchange, any user of a *coin can move value into an alternate chain, letting them take advantage of any new innovative features produced on other chains.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 22 Dec 2013 00:00:00 +1100</pubDate>
+        <link>http://xk.io/2013/12/22/factum-exchange/</link>
+        <guid isPermaLink="true">http://xk.io/2013/12/22/factum-exchange/</guid>
+      </item>
+    
+      <item>
+        <title>Lambsfry</title>
+        <description>&lt;h1 id=&quot;a-light-url-minifier-using-flask-and-redis&quot;&gt;A Light URL Minifier using Flask and Redis&lt;/h1&gt;
+
+&lt;p&gt;Lambsfry is a URL minifier like bit.ly or ow.ly.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/XertroV/lambsfry&quot;&gt;GitHub repo&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://u.xk.io&quot;&gt;Demo - u.xk.io&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Fri, 29 Nov 2013 00:00:00 +1100</pubDate>
+        <link>http://xk.io/2013/11/29/lambsfry/</link>
+        <guid isPermaLink="true">http://xk.io/2013/11/29/lambsfry/</guid>
+      </item>
+    
+      <item>
+        <title>Factum Money</title>
+        <description>&lt;h1 id=&quot;introducing-factum-money&quot;&gt;Introducing Factum Money&lt;/h1&gt;
+
+&lt;p&gt;Bitcoin is a disruptive technology, and since time immemorial disruptive technologies have challenged our existing theories and demanded improvement. I’m not going to beat around the bush trying to make Bitcoin conform to our existing schemas. We need to rethink what makes &lt;em&gt;types&lt;/em&gt; of money that particular type; not look into why Bitcoin can function as a currency - that is already well understood. I’ll outline what I think are the important constituents of money that help differentiate them today. We’ll then look into how Bitcoin fits in, hopefully in such a way that convinces you Bitcoin is truly novel.&lt;/p&gt;
+
+&lt;p&gt;Broadly, the three well understood forms of money are as follows: fiat money, commodity money (CM), and commodity-backed money (CBM). People will often separate the former with the latter two based on the notion of ‘intrinsic value’. While we can agree that all three have &lt;em&gt;value&lt;/em&gt;, we also know that the value of fiat money is derived from legislation: not an intrinsic property. &lt;/p&gt;
+
+&lt;p&gt;While this categorisation schema works for the above, I believe there is a more pertinent distinction to be made: that of &lt;strong&gt;non-monetary use-value&lt;/strong&gt;; i.e. the money type in question has some primary purpose other than to simply exchange value between parties. The primary use of fiat money is to exchange value, we can therefore see that not only does fiat not have any non-monetary use-value, but that the use-value of fiat money is fundamentally bound to the exchange-value. On the other hand, we see that CM and CBM derive their use value not just from exchange, but also from the intrinsic properties of the commodity itself. Therefore we can categorise these three forms of money as before, but with the determinant being non-monetary use-value.&lt;/p&gt;
+
+&lt;p&gt;The second property I’d like to introduce is the concept of ‘deferred value’, and ‘direct value’. Ultimately you can think of these as ‘an IOU’, or ‘not an IOU’ respectively.&lt;/p&gt;
+
+&lt;p&gt;Deferred value is seen in both commodity-backed money, and fiat money. Both are not so much valuable because of what they are, but because of what they &lt;em&gt;entitle&lt;/em&gt; the user to. This is easy to see in the case of commodity-backed money, such as a gold certificate, as it is redeemable for a commodity (in this case, gold). However, in the case of fiat money, it is not directly redeemable for any particular commodity, but is legislated that it has value. Put in another way: fiat money &lt;em&gt;entitles the user&lt;/em&gt; to some value. We should consider that if the legislatory environment surrounding either of the above were to collapse, they would respectively become useless. Commodity money can never truly reach zero value, but both CBM and fiat can, and so participating in such systems is like passing a hot potato; it’s okay as long as you’re not the one to get burnt. This is part of the nature of deferred value.&lt;/p&gt;
+
+&lt;p&gt;On the other hand, direct value implies that the received value is intrinsically tied to the received object. In the case of commodity money - say, rice - it is trivial to see that the value of rice (that you can eat it) is bestowed to the recipient immediately upon receipt.&lt;/p&gt;
+
+&lt;p&gt;By viewing the property of non-monetary use-value in light of deferred or direct value, we can see that while a gold certificate may have no particular non-monetary uses in and of itself, by acting as a method of deferred value it can inherit non-monetary use value from the commodity it is tied to.&lt;/p&gt;
+
+&lt;p&gt;As a visual summary, here is what we’ve talked about so far:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+Deferred Value    | Direct Value    |
+--------------------------------------------
+commodity-backed  | Commodity       | Has non-monetary
+Money             | Money           | use value
+--------------------------------------------
+Fiat Money,       |                 | No non-monetary
+Generic IOUs (e.g.|                 | use value
+paypal-us-dollars)|                 | 
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Enter Bitcoin: the rule breaker, the status quo usurper. You might have noticed there is one particular combination of the above properties that has not been covered by traditional monetary systems. It’s tempting to fill in the blank with Bitcoin; but we should remember that Bitcoin is merely an &lt;em&gt;example&lt;/em&gt; of this missing puzzle piece, just as the US Dollar is just an example of fiat currency. &lt;/p&gt;
+
+&lt;p&gt;```
+Definition: Factum Money
+	A stand-alone money system in which each unit, by its intrinsic properties 
+	alone, necessarily holds a non-zero value.&lt;/p&gt;
+
+&lt;p&gt;Reason for choice: &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Factum loosely translates from latin as 'done'; a play on words, as fiat 
+loosely translates as 'let it be so'. 
+
+Factum also lends itself to 'fact based currency': because of each individuals' 
+knowledge of the system, it is able to be used to exchange value; an appropriate description. ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To gain an intuitive understanding of what this really means, let us diverge from the topic for a moment to discuss aliens. (Bear with me!) It’s an assumed property of the universe that no matter where you are spatiotemporally the number pi will be constant. You can express this in various ways; but the simplest is that the ratio between the radius and circumference of a perfect circle is always constant. I suggest that Factum Money has a similar property: that regardless of position in space and time, society, culture, species, or any other physical differences, true Factum Money is able to transfer value. Doubtless each &lt;em&gt;instance&lt;/em&gt; of factum money can have local environmental factors that prohibit its use; Bitcoin is known to &lt;a href=&quot;http://bitcoinmagazine.com/bitcoin-is-not-quantum-safe-and-how-we-can-fix/&quot;&gt;lack quantum computing resistance&lt;/a&gt; and will fail if SHA256 is broken, just as Litecoin relies on Scrypt. However, due to the particular conditions of today, Bitcoin is able to transfer value, and holds the mantle of ‘Factum Money’.&lt;/p&gt;
+
+&lt;p&gt;Filling in the blank, we now we have a table that looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+Deferred Value    | Direct Value    |
+-------------------------------------------
+commodity-backed  | Commodity       | Has non-monetary
+Money             | Money           | use value
+--------------------------------------------
+Fiat Money        | Factum Money    | No non-monetary
+Generic IOUs (e.g.| e.g. Bitcoin    | use value
+paypal-us-dollars)|                 | 
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;There’s a great deal left to explore within this idea; of particular interest (which I’ll explore in a follow up post) is what this actually &lt;em&gt;means&lt;/em&gt; for Bitcoiners, and how we can predict and take advantage of this model. Cryptocurrency has many facets that have so far only been theoretically explored, in particular &lt;a href=&quot;http://zerocoin.org/&quot;&gt;perfect money laundering&lt;/a&gt;, and distributed exchanges. I’ll largely be exploring distributed exchanges in my next post.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 30 Aug 2013 00:00:00 +1000</pubDate>
+        <link>http://xk.io/2013/08/30/factum-money/</link>
+        <guid isPermaLink="true">http://xk.io/2013/08/30/factum-money/</guid>
+      </item>
+    
+  </channel>
+</rss>
