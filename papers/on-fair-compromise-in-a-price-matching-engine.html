@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="generator" content="http://www.nongnu.org/elyxer/"/>
+<meta name="create-date" content="2014-10-14"/>
+<link rel="stylesheet" href="http://elyxer.nongnu.org/lyx.css" type="text/css" media="all"/>
+<title>On Fair Compromise in Price Matching Engines</title>
+</head>
+<body>
+<div id="globalWrapper">
+<h1 class="title">
+On Fair Compromise in Price Matching Engines
+</h1>
+<h2 class="author">
+Max Kaye &lt;m@xk.io&gt;
+</h2>
+<h2 class="Date">
+October 2014
+</h2>
+<div class="abstract">
+<p class="abstract-message">
+Abstract
+</p>
+We show a fair compromise between two prices is the geometric mean of the two, not the arithmetic mean.
+</div>
+<div class="Unindented">
+Two parties, <span class="formula"><i>A</i></span> and <span class="formula"><i>B</i></span>, wish to trade. <span class="formula"><i>A</i></span> has <span class="formula"><i>u</i><sub>1</sub></span>s and <span class="formula"><i>B</i></span> has <span class="formula"><i>u</i><sub>2</sub></span>s. They determine that an agreeable price should have one important property: that they are benefited equally by the trade. They further decide the benefit should be measured in capital growth. Because they wish to derive their price without external bias, they accept a fair price must be judged against their own expectations. In order to determine some measure of growth, they agree it can be replaced with their improvement over their worst acceptable situation, provided it was actually an improvement<span class="FootOuter"><span class="SupFootMarker"> [A] </span><span class="HoverFoot"><span class="SupFootMarker"> [A] </span>This isn’t technically required, if a trade needed to occur this method also provides a valid conclusion, however, this is being considered in the context of a matching engine.</span></span>. This represents the perceived benefit or incentive for each party.
+</div>
+<div class="Indented">
+<div class="formula">
+<a class="eqnumber" name="eq:expected-actual">(1) </a><span class="fraction"><span class="ignored">(</span><span class="numerator"><i>A</i><sub><i>actual</i>, <i>end</i></sub></span><span class="ignored">)/(</span><span class="denominator"><i>A</i><sub><i>expected</i>, <i>end</i></sub></span><span class="ignored">)</span></span> = <span class="fraction"><span class="ignored">(</span><span class="numerator"><i>B</i><sub><i>actual</i>, <i>end</i></sub></span><span class="ignored">)/(</span><span class="denominator"><i>B</i><sub><i>expected</i>, <i>end</i></sub></span><span class="ignored">)</span></span>
+</div>
+
+</div>
+<div class="Indented">
+They each have a worst-case price in their head, such that <span class="formula"><i>p</i><sub><i>a</i></sub> &gt; <i>p</i><sub><i>b</i></sub></span> in units of <span class="formula"><span class="fraction"><sup class="unit">u<sub>1</sub></sup>⁄<sub class="unit">u<sub>2</sub></sub></span></span> (where <span class="formula"><i>A</i></span> is buying <span class="formula"><i>u</i><sub>2</sub></span>s, and <span class="formula"><i>B</i></span> is selling them, so <span class="formula"><i>A</i></span> is willing to pay more than <span class="formula"><i>B</i></span> is asking). This inequality ensures that <span class="formula"><i>A</i></span> always gets <i>more</i> <span class="formula"><i>u</i><sub>2</sub></span>s than they expect, and <span class="formula"><i>B</i></span> always gives away less than expected (per <span class="formula"><i>u</i><sub>1</sub></span>, that is). Thus, both parties gain.
+</div>
+<div class="Indented">
+They agree there exists some fair price <span class="formula"><span class="bar"><i>p</i></span></span> such that <span class="formula"><i>p</i><sub><i>a</i></sub> &gt; <span class="bar"><i>p</i></span> &gt; <i>p</i><sub><i>b</i></sub></span>.
+</div>
+<div class="Indented">
+They also agree the following relationship between start and end balances holds true:<div class="formula">
+<a class="eqnumber" name="eq:price-sub">(2) </a><span class="fraction"><span class="ignored">(</span><span class="numerator"><i>A</i><sub><i>u</i><sub>1</sub>, <i>start</i></sub></span><span class="ignored">)/(</span><span class="denominator"><span class="bar"><i>p</i></span></span><span class="ignored">)</span></span> = <i>A</i><sub><i>u</i><sub>2</sub>, <i>end</i></sub>;  <i>B</i><sub><i>u</i><sub>2</sub>, <i>start</i></sub><span class="bar"><i>p</i></span> = <i>B</i><sub><i>u</i><sub>1</sub>, <i>end</i></sub>
+</div>
+
+</div>
+<div class="Indented">
+Since <span class="formula"><i>p</i><sub><i>actual</i></sub> = <span class="bar"><i>p</i></span></span>, and <span class="formula"><i>p</i><sub><i>expected</i></sub> = <i>p</i><sub><i>a</i></sub></span> (or <span class="formula"><i>p</i><sub><i>b</i></sub></span>), <a class="Reference" href="#eq:expected-actual">(1↑)</a> and <a class="Reference" href="#eq:price-sub">(2↑)</a> give us<div class="formula">
+<span class="fraction"><span class="ignored">(</span><span class="numerator"><span class="fraction"><span class="ignored">(</span><span class="numerator"><i>A</i><sub><i>u</i><sub>1</sub>, <i>start</i></sub></span><span class="ignored">)/(</span><span class="denominator"><span class="bar"><i>p</i></span></span><span class="ignored">)</span></span></span><span class="ignored">)/(</span><span class="denominator"><span class="fraction"><span class="ignored">(</span><span class="numerator"><i>A</i><sub><i>u</i><sub>1</sub>, <i>start</i></sub></span><span class="ignored">)/(</span><span class="denominator"><i>p</i><sub><i>a</i></sub></span><span class="ignored">)</span></span></span><span class="ignored">)</span></span> = <span class="fraction"><span class="ignored">(</span><span class="numerator"><i>B</i><sub><i>u</i><sub>2</sub>, <i>start</i></sub><span class="bar"><i>p</i></span></span><span class="ignored">)/(</span><span class="denominator"><i>B</i><sub><i>u</i><sub>2</sub>, <i>start</i></sub><i>p</i><sub><i>b</i></sub></span><span class="ignored">)</span></span>
+</div>
+
+</div>
+<div class="Indented">
+<div class="formula">
+<a class="eqnumber" name="eq:pbar-pa-pb">(3) </a><span class="fraction"><span class="ignored">(</span><span class="numerator"><i>p</i><sub><i>a</i></sub></span><span class="ignored">)/(</span><span class="denominator"><span class="bar"><i>p</i></span></span><span class="ignored">)</span></span> = <span class="fraction"><span class="ignored">(</span><span class="numerator"><span class="bar"><i>p</i></span></span><span class="ignored">)/(</span><span class="denominator"><i>p</i><sub><i>b</i></sub></span><span class="ignored">)</span></span>
+</div>
+
+</div>
+<div class="Indented">
+<div class="formula">
+<a class="eqnumber" name="eq:geom-mean">(4) </a><span class="bar"><i>p</i></span> = <span class="sqrt"><span class="radical">√</span><span class="ignored">(</span><span class="root"><i>p</i><sub><i>a</i></sub><i>p</i><sub><i>b</i></sub></span><span class="ignored">)</span></span>
+</div>
+
+</div>
+<div class="Indented">
+Thus, we see with <a class="Reference" href="#eq:geom-mean">(4↑)</a> that a fair price is the geometric mean of both prices.
+</div>
+<h3 class="Subsubsection-">
+<a class="toc" name="toc-Subsubsection--1"></a>Arithmetic Mean
+</h3>
+<div class="Unindented">
+If we use the arithmetic mean instead of the geometric mean, we set <span class="formula"><span class="bar"><i>p</i></span> = <span class="fraction"><span class="ignored">(</span><span class="numerator"><i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub></span><span class="ignored">)/(</span><span class="denominator">2</span><span class="ignored">)</span></span></span>, and thus using <a class="Reference" href="#eq:expected-actual">(1↑)</a> and <a class="Reference" href="#eq:price-sub">(2↑)</a> we see that instead of <a class="Reference" href="#eq:pbar-pa-pb">(3↑)</a> we find: 
+</div>
+<div class="Indented">
+<div class="formula">
+<a class="eqnumber" name="eq:arithmetic-inequality">(5) </a><span class="environment"><span class="arrayrow">
+<span class="arraycell align-r">
+<i>LHS</i>
+</span>
+<span class="arraycell align-c">
+ = 
+</span>
+<span class="arraycell align-l">
+<span class="fraction"><span class="ignored">(</span><span class="numerator"><i>p</i><sub><i>a</i></sub></span><span class="ignored">)/(</span><span class="denominator"><span class="fraction"><span class="ignored">(</span><span class="numerator"><i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub></span><span class="ignored">)/(</span><span class="denominator">2</span><span class="ignored">)</span></span></span><span class="ignored">)</span></span>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+
+</span>
+<span class="arraycell align-c">
+ = 
+</span>
+<span class="arraycell align-l">
+<span class="fraction"><span class="ignored">(</span><span class="numerator">2<i>p</i><sub><i>a</i></sub></span><span class="ignored">)/(</span><span class="denominator"><i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub></span><span class="ignored">)</span></span>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+
+</span>
+<span class="arraycell align-c">
+ = 
+</span>
+<span class="arraycell align-l">
+<span class="fraction"><span class="ignored">(</span><span class="numerator">4<i>p</i><sub><i>a</i></sub><i>p</i><sub><i>b</i></sub></span><span class="ignored">)/(</span><span class="denominator">2<i>p</i><sub><i>b</i></sub>(<i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub>)</span><span class="ignored">)</span></span>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+<i>RHS</i>
+</span>
+<span class="arraycell align-c">
+ = 
+</span>
+<span class="arraycell align-l">
+<span class="fraction"><span class="ignored">(</span><span class="numerator"><i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub></span><span class="ignored">)/(</span><span class="denominator">2<i>p</i><sub><i>b</i></sub></span><span class="ignored">)</span></span>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+
+</span>
+<span class="arraycell align-c">
+ = 
+</span>
+<span class="arraycell align-l">
+<span class="fraction"><span class="ignored">(</span><span class="numerator">(<i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub>)<sup>2</sup></span><span class="ignored">)/(</span><span class="denominator">2<i>p</i><sub><i>b</i></sub>(<i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub>)</span><span class="ignored">)</span></span>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+
+</span>
+<span class="arraycell align-c">
+<i>but</i>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+2<i>p</i><sub><i>b</i></sub>(<i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub>)(<i>RHS</i> − <i>LHS</i>)
+</span>
+<span class="arraycell align-c">
+ = 
+</span>
+<span class="arraycell align-l">
+(<i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub>)<sup>2</sup> − 4<i>p</i><sub><i>a</i></sub><i>p</i><sub><i>b</i></sub>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+
+</span>
+<span class="arraycell align-c">
+ = 
+</span>
+<span class="arraycell align-l">
+(<i>p</i><sub><i>a</i></sub> − <i>p</i><sub><i>b</i></sub>)<sup>2</sup>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+
+</span>
+<span class="arraycell align-c">
+ &gt; 
+</span>
+<span class="arraycell align-l">
+0 <i>if</i> <i>p</i><sub><i>a</i></sub> ≠ <i>p</i><sub><i>b</i></sub>
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+<i>Therefore</i>, 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+2<i>p</i><sub><i>b</i></sub>(<i>p</i><sub><i>a</i></sub> + <i>p</i><sub><i>b</i></sub>)(<i>RHS</i> − <i>LHS</i>)
+</span>
+<span class="arraycell align-c">
+ &gt; 
+</span>
+<span class="arraycell align-l">
+0
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+<i>RHS</i> − <i>LHS</i>
+</span>
+<span class="arraycell align-c">
+ &gt; 
+</span>
+<span class="arraycell align-l">
+0
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+ 
+</span>
+<span class="arraycell align-c">
+ 
+</span>
+<span class="arraycell align-l">
+ 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="arraycell align-r">
+<i>RHS</i>
+</span>
+<span class="arraycell align-c">
+ &gt; 
+</span>
+<span class="arraycell align-l">
+<i>LHS</i>
+</span>
+
+</span>
+</span>
+</div>
+
+</div>
+<div class="Indented">
+This inequality shows that the person with the <i>lower </i>price is disproportionately benefited (gains more) by using the arithmetic mean.
+</div>
+<div class="Indented">
+Additionally, the arithmetic average of <span class="formula"><i>p</i><sub><i>a</i></sub></span> and <span class="formula"><i>p</i><sub><i>b</i></sub></span> is not equal to the reciprocal of the average of <span class="formula"><span class="fraction"><span class="ignored">(</span><span class="numerator">1</span><span class="ignored">)/(</span><span class="denominator"><i>p</i><sub><i>a</i></sub></span><span class="ignored">)</span></span></span> and <span class="formula"><span class="fraction"><span class="ignored">(</span><span class="numerator">1</span><span class="ignored">)/(</span><span class="denominator"><i>p</i><sub><i>b</i></sub></span><span class="ignored">)</span></span></span>; their geometric averages, however, have this property. In a matching engine this means there is no bias provided by the base currency pair.
+</div>
+<div class="Indented">
+<div class="formula">
+■
+</div>
+
+</div>
+
+<hr class="footer"/>
+<div class="footer" id="generated-by">
+Document generated by <a href="http://elyxer.nongnu.org/">eLyXer 1.2.5 (2013-03-10)</a> on <span class="create-date">2014-10-14T16:57:13.849610</span>
+</div>
+</div>
+</body>
+</html>
