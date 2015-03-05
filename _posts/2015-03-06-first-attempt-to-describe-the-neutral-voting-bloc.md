@@ -1,3 +1,11 @@
+---
+title: A first attempt to describe the neutral voting bloc.
+author: Max Kaye
+date: 2015-03-06
+layout: post
+summary: I outline the neutral voting bloc and tell you about why it might be okay.
+---
+
 Originally written some time around 7 Feb, 2014.
 
 Governance is currently a centralized endeavour in most developed nations, and inefficiencies arise in the modern age due to design assumptions made (typically) in the 17th through 20th centuries. Assumptions like speed of communication (snail mail), the ability of constituents to understand policy (non-universal education), travel time (days to weeks), and magnitude of population (orders less than today), among others. Since nearly all of these assumptions are now wrong, we expect that more efficient and just systems must now be possible. Furthermore, we expect there to exist some incremental solution by which a smooth transition into a new political and societal structure so that the transition can occur over decades (slowly and steady) instead of days (hasty revolution). A potential solution — a neutral voting bloc — is presented below aimed at the Australian Federal Senate due to the system of preference allocation as parties are eliminated from the race. Over time this system can diffuse into local and state governments. Additionally the structure is such that the bloc (as a party) can safely hold 51% (or more) of parliament without facilitating tyranny of the majority.
