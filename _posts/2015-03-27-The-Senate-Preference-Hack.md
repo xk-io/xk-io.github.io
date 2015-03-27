@@ -3,12 +3,12 @@ title: The Senate Preference Hack
 author: Max Kaye
 date: 2015-03-27
 layout: post
-summary: The Senate Preference Hack enables a political party to gain unfair representation in the senate...
+summary: The Senate Preference Hack enables a political party to gain unfair representation in the federal Senate...
 ---
 
 # Introduction
 
-The Australian Senate (both federal and state levels, thogh federal is particularly considered here) use an unintuitive system of preference voting. Due to the low barrier to appearing on the ballot there are sometimes many persons and parties vying for the six senate seats per state up for election. To help provide a reasonable and quick voting experience for voters, they have the option of voting 'above the line' where they select just one party (or group) to support and allow that party or group to set the list of preferences for them. In this way they vote with the party.
+The Australian Senate use an unintuitive system of preference voting. Due to the low barrier to appearing on the ballot there are sometimes many persons and parties vying for the six senate seats per state up for election. To help provide a reasonable and quick voting experience for voters, they have the option of voting 'above the line' where they select just one party (or group) to support and allow that party or group to set the list of preferences for them. In this way they vote with the party.
 
 The seats themselves and the process of filling them is based on a quota system. This means that once a party has secured enough votes to garentee them a seat, the number of votes dictated by the quota are removed, though all preferences continue to be counted using a weighting system (to account for the already elected candidate). Usually the first 3 or 4 seats are uncontentious, however, the 5th seat and particularly the 6th seat can often be extremely dependant on how preferences flow during the election. Of particular note is the election of Ricky Muir who was elected to the senate during the 2013 federal election. Without these complex preference flows he would not have been elected as the number of first-preference votes the Motoring Enthusiast Party (which he represents) recieved was well below the quota.
 
