@@ -1,7 +1,9 @@
 ---
 title: The Senate Preference Hack
 author: Max Kaye
-date: 2015-03-27 12:00:00
+date: 2015-03-27
+layout: post
+summary: The Senate Preference Hack enables a political party to gain unfair representation in the senate...
 ---
 
 # Introduction
