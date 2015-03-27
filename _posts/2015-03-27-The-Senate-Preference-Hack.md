@@ -6,7 +6,7 @@ layout: post
 summary: The Senate Preference Hack enables a political party to gain unfair representation in the federal Senate...
 ---
 
-# Introduction
+# Introduction 
 
 The Australian Senate uses an unintuitive system of preference voting. Due to the low barrier to appearing on the ballot there are sometimes many persons and parties vying for the six senate seats per state up for election. To help provide a reasonable and quick voting experience for voters, they have the option of voting 'above the line' where they select just one party (or group) to support and allow that party or group to set the list of preferences for them. In this way they vote with the party.
 
