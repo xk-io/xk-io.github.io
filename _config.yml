@@ -15,3 +15,6 @@ permalink: pretty
 paginate: 20
 sass:
   compressed: true
+
+# Page settings
+page.small: false
