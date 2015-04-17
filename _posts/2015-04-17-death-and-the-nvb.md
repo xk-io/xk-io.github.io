@@ -6,8 +6,6 @@ layout: post
 summary: Without correlating deaths of voters to the expiration of their identity it is difficult to maintain anonymity in a decentralized voting system. A system of expiry (and revalidation) is suggested that is compatible with CoinJoin to allow the best of both worlds.
 ---
 
-# Handling Death and the NVB
-
 It occured to me that there is an unsolved problem with the NVB: death.
 
 When a voter dies, if there is no connection between their physical death and their cryptographic identity; it continues to live on. This brings up a new-ish toxic market: dead people's ID. In short, since they don't expire they essentially become a 'vote for hire' if they can be recovered. Artificially inflating the voting pool in this way would almost certainly be to the long term detriment of the quality of governance we are obliged to accept (or is it? I presume yes for the moment).
