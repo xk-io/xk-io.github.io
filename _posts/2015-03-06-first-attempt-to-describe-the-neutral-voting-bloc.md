@@ -3,7 +3,7 @@ title: A first attempt to describe the neutral voting bloc.
 author: Max Kaye
 date: 2015-03-06
 layout: post
-summary: I outline the neutral voting bloc and tell you about why it might be okay.
+summary: I outline the neutral voting bloc and tell you about why it's awesome.
 ---
 
 Originally written some time around 7 Feb, 2014.
