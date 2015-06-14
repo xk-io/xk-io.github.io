@@ -6,6 +6,8 @@ layout: post
 summary: How to edit the Bitcoin Core source code to allow sending nonstandard transactions quickly.
 ---
 
+NB: This document is [better read from github](https://github.com/xk-io/xk-io.github.io/blob/master/_posts/2015-05-10-broadcast-nonstandard-transactions.md), due to fomatting issues with the code.
+
 So, I recently wanted to [broadcast a nonstandard tx](https://blockchain.info/tx/c058286d078f059eab4231475ad6fc23c4cd1520d603128b900c13582728a961?show_adv=true) and didn't want to wait for full blockchain sync on my dev machine.
 
 I knew that Eligius supports the [Free Tx Relay Policy](https://en.bitcoin.it/wiki/Free_transaction_relay_policy), and that I'd sent them nonstandard txs before, but all the IPs I could find weren't accepting connections. Finally I found `68.168.105.168` and was able to connect and broadcast the message. Later I realised you can [search getaddr.bitnodes.io for 'eligius' to find nodes](https://getaddr.bitnodes.io/nodes/leaderboard/?q=eligius).
