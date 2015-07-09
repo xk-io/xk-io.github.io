@@ -23,20 +23,18 @@ By viewing the property of non-monetary use-value in light of deferred or direct
 
 As a visual summary, here is what we've talked about so far:
 
-```
-Deferred Value    | Direct Value    |
---------------------------------------------
-commodity-backed  | Commodity       | Has non-monetary
-Money             | Money           | use value
---------------------------------------------
-Fiat Money,       |                 | No non-monetary
-Generic IOUs (e.g.|                 | use value
-paypal-us-dollars)|                 | 
-```
+    Deferred Value    | Direct Value    |
+    --------------------------------------------
+    commodity-backed  | Commodity       | Has non-monetary
+    Money             | Money           | use value
+    --------------------------------------------
+    Fiat Money,       |                 | No non-monetary
+    Generic IOUs (e.g.|                 | use value
+    paypal-us-dollars)|                 | 
 
 Enter Bitcoin: the rule breaker, the status quo usurper. You might have noticed there is one particular combination of the above properties that has not been covered by traditional monetary systems. It's tempting to fill in the blank with Bitcoin; but we should remember that Bitcoin is merely an *example* of this missing puzzle piece, just as the US Dollar is just an example of fiat currency. 
 
-```
+<code>
 Definition: Factum Money
 	A stand-alone money system in which each unit, by its intrinsic properties 
 	alone, necessarily holds a non-zero value.
@@ -48,13 +46,13 @@ Reason for choice:
 	
 	Factum also lends itself to 'fact based currency': because of each individuals' 
 	knowledge of the system, it is able to be used to exchange value; an appropriate description.
-```
+<code>
 
 To gain an intuitive understanding of what this really means, let us diverge from the topic for a moment to discuss aliens. (Bear with me!) It's an assumed property of the universe that no matter where you are spatiotemporally the number pi will be constant. You can express this in various ways; but the simplest is that the ratio between the radius and circumference of a perfect circle is always constant. I suggest that Factum Money has a similar property: that regardless of position in space and time, society, culture, species, or any other physical differences, true Factum Money is able to transfer value. Doubtless each *instance* of factum money can have local environmental factors that prohibit its use; Bitcoin is known to [lack quantum computing resistance](http://bitcoinmagazine.com/bitcoin-is-not-quantum-safe-and-how-we-can-fix/) and will fail if SHA256 is broken, just as Litecoin relies on Scrypt. However, due to the particular conditions of today, Bitcoin is able to transfer value, and holds the mantle of 'Factum Money'.
 
 Filling in the blank, we now we have a table that looks like this:
 
-```
+<pre>
 Deferred Value    | Direct Value    |
 -------------------------------------------
 commodity-backed  | Commodity       | Has non-monetary
@@ -63,6 +61,6 @@ Money             | Money           | use value
 Fiat Money        | Factum Money    | No non-monetary
 Generic IOUs (e.g.| e.g. Bitcoin    | use value
 paypal-us-dollars)|                 | 
-```
+</pre>
 
 There's a great deal left to explore within this idea; of particular interest (which I'll explore in a follow up post) is what this actually *means* for Bitcoiners, and how we can predict and take advantage of this model. Cryptocurrency has many facets that have so far only been theoretically explored, in particular [perfect money laundering](http://zerocoin.org/), and distributed exchanges. I'll largely be exploring distributed exchanges in my next post.
