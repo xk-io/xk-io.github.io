@@ -34,12 +34,13 @@ paypal-us-dollars)|                 |
 
 Enter Bitcoin: the rule breaker, the status quo usurper. You might have noticed there is one particular combination of the above properties that has not been covered by traditional monetary systems. It's tempting to fill in the blank with Bitcoin; but we should remember that Bitcoin is merely an *example* of this missing puzzle piece, just as the US Dollar is just an example of fiat currency. 
 
-* Definition: Factum Money
-* A stand-alone money system in which each unit, by its intrinsic properties alone, necessarily holds a non-zero value.
+#### Definition: Factum Money
 
-* Rational: 
-* Factum loosely translates from latin as 'done'; a play on words, as fiat loosely translates as 'let it be so'. 
-* Factum also lends itself to 'fact based currency': because of each individuals' knowledge of the system, it is able to be used to exchange value; an appropriate description.
+A stand-alone money system in which each unit, by its intrinsic properties alone, necessarily holds a non-zero value.
+
+#### Rational: 
+*Factum* loosely translates from latin as 'done'; a play on words, as fiat loosely translates as 'let it be so'. 
+*Factum* also lends itself to 'fact based currency': because of each individuals' knowledge of the system, it is able to be used to exchange value; an appropriate description.
 
 To gain an intuitive understanding of what this really means, let us diverge from the topic for a moment to discuss aliens. (Bear with me!) It's an assumed property of the universe that no matter where you are spatiotemporally the number pi will be constant. You can express this in various ways; but the simplest is that the ratio between the radius and circumference of a perfect circle is always constant. I suggest that Factum Money has a similar property: that regardless of position in space and time, society, culture, species, or any other physical differences, true Factum Money is able to transfer value. Doubtless each *instance* of factum money can have local environmental factors that prohibit its use; Bitcoin is known to [lack quantum computing resistance](http://bitcoinmagazine.com/bitcoin-is-not-quantum-safe-and-how-we-can-fix/) and will fail if SHA256 is broken, just as Litecoin relies on Scrypt. However, due to the particular conditions of today, Bitcoin is able to transfer value, and holds the mantle of 'Factum Money'.
 
