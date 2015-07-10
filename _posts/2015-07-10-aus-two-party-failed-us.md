@@ -61,8 +61,6 @@ What if this party was [already in motion][5] and on the way to gaining 550 memb
 
 The Neutral Voting Bloc is the only solution I know of, which is why I'm building it. Join me?
 
-**TL;DR** I'm starting a political party to address some major epistemological issues with canonical democracy, which just so happen to coincide with two terrible major parties.
-
 [1]: http://junkee.com/australias-two-party-system-has-failed-us-heres-how-we-can-fix-it/60812
 [2]: http://redd.it/3cjfxx
 [3]: http://www.iep.utm.edu/popp-pol/#SH2a
