@@ -62,7 +62,7 @@ What if this party was [already in motion][5] and on the way to gaining 550 memb
 The Neutral Voting Bloc is the only solution I know of, which is why I'm building it. Join me?
 
 [1]: http://junkee.com/australias-two-party-system-has-failed-us-heres-how-we-can-fix-it/60812
-[2]: http://redd.it/3cjfxx
+[2]: https://np.reddit.com/r/australia/comments/3cjfxx/australias_twoparty_system_has_failed_us_heres/
 [3]: http://www.iep.utm.edu/popp-pol/#SH2a
 [4]: http://xk.io/2015/03/27/The-Senate-Preference-Hack/
 [5]: https://www.youtube.com/watch?v=fg0_Vhldz-8
