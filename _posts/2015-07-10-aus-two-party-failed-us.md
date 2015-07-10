@@ -4,6 +4,7 @@ author: Max Kaye
 date: 2015-07-10
 layout: post
 summary: I respond to a Junkee article by a similar name and explain why we can't just elect the perfect independent, and why we need to innovate to get out of this political hole we've dug ourselves into.
+comments: true
 ---
 
 A few days ago a [Junkee article][1] by a similar title was [posted to /r/Australia][2], and although the author's heart was in the right place the 'solution' to just replace bad politicians with good independent politicians is not solution at all. However, there is still hope, as I shall explain.
