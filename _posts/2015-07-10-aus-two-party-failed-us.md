@@ -7,13 +7,13 @@ summary: I respond to a Junkee article by a similar name and explain why we can'
 comments: true
 ---
 
-A few days ago a [Junkee article][1] by a similar title was [posted to /r/Australia][2], and although the author's heart was in the right place the 'solution' to just replace bad politicians with good independent politicians is not solution at all. However, there is still hope, as I shall explain.
+A few days ago a [Junkee article][1] by a similar title was [posted to /r/Australia][2], and although the author's heart was in the right place, the 'solution' to just replace bad politicians with good independent politicians is no solution at all. However, there is still hope, as I shall explain.
 
 Before I go on, I am trying to start a political party to directly address the philosophical issues I explore through this post. It is called the [Neutral Voting Bloc][8], and it is novel in strategy, implementation, and philosophy.
 
 Here's the crux of my argument: replacing party-politicians with independent-politicians will not work well. Without infrastructure to prevent re-party-fication and factionalization there is no reason to believe that independents can provide a long term solution, or will avoid joining new or existing parties, or that they will be any more effective than current representatives. Ignoring the glaringly obvious lack of Gilmore's plan working en mass anywhere else in the world, the problem lies with a common obsession in democracies: "who should rule?" It is a toxic question that leads to faulty reasoning. It is epistemologically analogous to "who is the authoritative source of knowledge?" There is no authoritative source of knowledge, and likewise, there are no permanently good rulers. 
 
-There is an additional problem with existing explanations of why democracy works: just as empiricism though that somehow the laws of nature were 'written' on to the mind through observation, some proponents of democracy think that the right rulers are somehow 'read' from the minds of voters. But voters are not a magic 8 ball, they are just as fallible as politicians, and perfectly capable of making the same mistakes. Without accepting this fallibility how can we design a democratic system that is immune? If we fight with reality we will not be able to keep from fooling ourselves.
+There is an additional problem with existing explanations of why democracy works: just as the philosophy of empiricism thought that somehow the laws of nature were 'written' on to the mind through observation, some proponents of democracy think that the right rulers are somehow 'read' from the minds of voters. But voters are not a magic 8 ball, they are just as fallible as politicians, and perfectly capable of making the same mistakes. Without accepting this fallibility how can we design a democratic system that is immune? If we fight with reality we will not be able to keep from fooling ourselves.
 
 We can see the who-should-rule question embedded all over the place:
 
@@ -28,7 +28,7 @@ Or from Jane Gilmore, the author of the original article:
 
 > What if every rural seat in the country sent someone to parliament who was prepared to actually fight for the things that matter to rural communities? What if the country people elected MPs who were strongly invested in rural medical facilities, ... [many more examples] ... infrastructure and education?
 
-Excluding the obvious question 'who are they fighting and how long will that last?', unfortunately, electing a benevolent dictator is not really a solution. Essentially, that is the fictional entity Gilmore imagines, and often what we all imagine, but it is a simplistic and flawed vision. The who-should-rule question has no good answer, especially for communities of our size. There are just too many ideas, people, interests, and motives for one independent to represent them all fairly. It doesn't matter how much someone *wants* to do good things, that in no way *enables* them to. Without an explanation of *why* results should improve we should not expect then to. Gilmore offers no such explanation.
+Excluding the obvious question 'who are they fighting and how long will that last?', unfortunately, electing a benevolent dictator is not really a solution. Essentially, that is the fictional entity Gilmore imagines, and often what we all imagine, but it is a simplistic and flawed vision. The who-should-rule question has no good answer, especially for communities of our size. There are just too many ideas, people, interests, and motives for one independent to represent them all fairly. It doesn't matter how much someone *wants* to do good things, that in no way *enables* them to. Without an explanation of *why* results should improve we should not expect them to. Gilmore offers no such explanation.
 
 There are also a number of *traditional* political problems Gilmore's 'solution' doesn't solve. For example, minor parties have never been good at working together: factions, ideology, dogma, these are what are expressed when you put minor parties in a room. It's not a magic recipe for success, and we've known that for a long time.
 
@@ -57,9 +57,11 @@ What if Australia had an unique entry point for new ideas, a way to experiment, 
 
 What if this political party could house a direct democracy, and allow all voters to participate whenever they felt it necessary? What if leaders were held to account throughout their term, and in the cases they needed removing, what if we could remove them? What if we embrace bold new voting systems, allowing rules and division of power based on issues? What if you could set a delegate like a family member, or friend, or community leader, instead of having to vote all the time? What if this happened through every level of our political system, so that power structures could be quickly rearranged without needing the whole population to vote? What if we could somehow introduce [liquid democracy][5], to ensure that voting can be *fast and cheap*? What if we used modern cryptography to ensure anonymity, cost effectiveness, and immutable and transparent ballots?
 
-What if this party was [already in motion][5] and on the way to gaining 550 members so it can register federally and run for the next election? What if this party had a [solid plan of action][7] and the explanations to back it up? What if your actions today help decide the future of our parliament, and the future of Australia? What if you had the change to [join this party][8]? What if you could be part of the 1% to take back democracy?
+What if this party was [already in motion][5] and on the way to gaining 550 members so it can register federally and run for the next election? What if this party had a [solid plan of action][7] and the explanations to back it up? What if your actions today help decide the future of our parliament, and the future of Australia? What if you had the chance to [join this party][8]? What if you could be part of the 1% to take back democracy?
 
 The Neutral Voting Bloc is the only solution I know of, which is why I'm building it. Join me?
+
+**TL;DR** I'm starting a political party to address some major epistemological issues with canonical democracy, which just so happen to coincide with two terrible major parties.
 
 [1]: http://junkee.com/australias-two-party-system-has-failed-us-heres-how-we-can-fix-it/60812
 [2]: http://redd.it/3cjfxx
