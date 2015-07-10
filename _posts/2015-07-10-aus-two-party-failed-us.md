@@ -7,7 +7,7 @@ summary: I respond to a Junkee article by a similar name and explain why we can'
 comments: true
 ---
 
-A few days ago a [Junkee article][1] by a similar title was [posted to /r/Australia][2], and although the author's heart was in the right place, the 'solution' to just replace bad politicians with good independent politicians is no solution at all. However, there is still hope, as I shall explain.
+A few days ago a [Junkee article by Jane Gilmore][1] of a similar title was [posted to /r/Australia][2], and although Gilmore's heart was in the right place, the solution to just replace bad politicians with good independent politicians is no solution at all. However, there is still hope, as I shall explain.
 
 Here's the crux of my argument: replacing party-politicians with independent-politicians will not work well. Without infrastructure to prevent re-party-fication and factionalization there is no reason to believe that independents can provide a long term solution, or will avoid joining new or existing parties, or that they will be any more effective than current representatives. Ignoring the lack of Gilmore's plan working en mass anywhere else in the world, the problem lies with a common obsession in democracies: "who should rule?" It is a toxic question that leads to faulty reasoning. It is epistemologically analogous to "who is the authoritative source of knowledge?" There is no authoritative source of knowledge, and likewise, there are no permanently good rulers. 
 
@@ -55,8 +55,7 @@ What if Australia had an unique entry point for new ideas, a way to experiment, 
 
 What if this political party could house a direct democracy, and allow all voters to participate whenever they felt it necessary? What if leaders were held to account throughout their term, and in the cases they needed removing, what if we could remove them? What if we embrace bold new voting systems, allowing rules and division of power based on issues? What if you could set a delegate like a family member, or friend, or community leader, instead of having to vote all the time? What if this happened through every level of our political system, so that power structures could be quickly rearranged without needing the whole population to vote? What if we could somehow introduce [liquid democracy][5], to ensure that voting can be *fast and cheap*? What if we used modern cryptography to ensure anonymity, cost effectiveness, and immutable and transparent ballots?
 
-What if this party was [already in motion][5] and on the way to gaining 550 members so it can register Federally and run for the next election? What if this party had a [solid plan of action][7] and the explanations to back it up? What if your actions today help decide the future of our parliament, and the future of Australia? What if you had the chance to [join this party][
-]? What if you could be part of the 1% to take back democracy?
+What if this party was [already in motion][5] and on the way to gaining 550 members so it can register Federally and run for the next election? What if this party had a [solid plan of action][7] and the explanations to back it up? What if your actions today help decide the future of our parliament, and the future of Australia? What if you had the chance to [join this party][9]? What if you could be part of the 1% to take back democracy?
 
 I am trying to start a political party to directly address the philosophical issues I explore through this post. It is called the [Neutral Voting Bloc][8], requires ~1% of the primary vote to win 6 Senate seats, and it is novel in strategy, implementation, and philosophy.
 
@@ -70,3 +69,4 @@ The Neutral Voting Bloc is the only solution I know of, which is why I'm buildin
 [6]: http://xk.io/2015/03/06/first-attempt-to-describe-the-neutral-voting-bloc/
 [7]: https://www.youtube.com/watch?v=moFGcYqizzU
 [8]: http://nvbloc.org
+[9]: http://nvbloc.org/join
