@@ -36,16 +36,16 @@ If our existing electoral system had the answer within it all along, then it wou
 
 [Karl Popper had a useful criterion][3] for determining the quality of a democratic government. First, a democracy is one in which bad policy can be removed without violence. Tick. Second, `the quality of a democracy is *how well* it can remove bad policy. (1)` Uhhh, we're probably about a 'D+' on that one. I challenge anyone to think of a better method of ranking democracies with such an objective and explicable quality.
 
-A truism:
+I will construct a truism:
 
 `The optimum political strategy is not to implement good policy and remove bad policy. (2)`
 
-This is fairly self evident:
+We know this because:
 
 1. Current political strategies that work do not resemble (2)
 2. People who try (2) face overwhelming odds and rarely succeed beyond the small scale
 
-Gilmore's suggestion does nothing to promote (2). Without addressing interactions with our political systems how can we expect the policy we produce to improve? If we don't change how vulnerable our representatives are to removal, why should we expect any greater control than we have now? In short, to achieve anything resembling (2) requires change to both how power is structured and instantiated in people, furthermore, such a change cannot be obsessed with 'who should rule'.
+Without addressing (2) how can we expect the policy we produce to improve? If we don't change how vulnerable our representatives are to removal, why should we expect any greater control than we have now? In short, to achieve anything resembling (2) requires change to both how power is structured and instantiated in people, furthermore, such a change cannot be obsessed with 'who should rule'.
 
 I'll follow now in Gilmore's footsteps, and give you a few paragraphs of 'what ifs', of the requirements, the potential, the promises, and the hardships. Everything from here out can be started tomorrow, if we put the work in.
 
