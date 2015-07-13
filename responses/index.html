@@ -1,24 +1,23 @@
 ---
 layout: default
+title: Responses
+permalink: /responses/
 ---
 
 <div class="home">
 
   <div class="posts">
-    {% for post in paginator.posts %}
+    {% for post in site.posts %}
 		{% if post.response %}
-		  {% comment %} do nothing {% endcomment %}
-        {% else %}
           <div class="post">
           <a href="{{ post.url | prepend: site.baseurl }}" class="post-link">
             <p class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</p>
             <h3 class="h2 post-title">{{ post.title }}</h3>
-            <p class="post-summary">{{ post.summary }}</p>
           </a>
+            <p class="post-summary">Responding to: <a href="{{ post.original_url }}">{{ post.original_title }}</a></p>
           </div>
-      {% endif %}
+		{% endif %}
     {% endfor %}
   </div>
-
-  {% include pagination.html %}
+  
 </div>
