@@ -19,10 +19,10 @@ sass:
 # Page settings
 page.small: false
 
-defaults:
+defaults: 
   -
-    scope:
-	  path: ""
-	  post: "posts"
-	values:
-	  response: false
+    scope: 
+      path: ""
+      post: "posts"
+    values: 
+      response: false
