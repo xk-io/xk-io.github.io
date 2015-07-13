@@ -8,15 +8,15 @@ permalink: /responses/
 
   <div class="posts">
     {% for post in site.posts %}
-      <div class="post">
 		{% if post.response %}
+          <div class="post">
           <a href="{{ post.url | prepend: site.baseurl }}" class="post-link">
             <p class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</p>
             <h3 class="h2 post-title">{{ post.title }}</h3>
-            <p class="post-summary">{{ post.summary }}</p>
           </a>
+            <p class="post-summary"><a href="{{ post.original_url }}">{{ post.original_url }}</a></p>
+          </div>
 		{% endif %}
-      </div>
     {% endfor %}
   </div>
   
