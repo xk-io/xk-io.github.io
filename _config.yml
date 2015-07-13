@@ -23,5 +23,6 @@ defaults:
   -
     scope: 
       path: ""
+      type: "posts"
     values: 
       response: false
