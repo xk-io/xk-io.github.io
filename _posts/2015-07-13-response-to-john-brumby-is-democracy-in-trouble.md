@@ -4,6 +4,7 @@ original_url: http://democracyrenewal.edu.au/democracy-trouble-0
 author: Max Kaye
 date: 2015-07-13
 response: true
+layout: post
 ---
 
 
