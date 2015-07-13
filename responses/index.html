@@ -7,7 +7,7 @@ permalink: /responses/
 <div class="home">
 
   <div class="posts">
-    {% for post in paginator.posts %}
+    {% for post in site.posts %}
       <div class="post">
 		{% if post.response %}
           <a href="{{ post.url | prepend: site.baseurl }}" class="post-link">
@@ -19,6 +19,5 @@ permalink: /responses/
       </div>
     {% endfor %}
   </div>
-
-  {% include pagination.html %}
+  
 </div>

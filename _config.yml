@@ -13,7 +13,6 @@ show_related_posts: false
 markdown: kramdown
 permalink: pretty
 paginate: 20
-paginate_path: "responses/page:num/"
 sass:
   compressed: true
 
