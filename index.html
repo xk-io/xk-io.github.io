@@ -7,12 +7,8 @@ layout: default
   <div class="posts">
     {% for post in paginator.posts %}
       <div class="post">
-        {% if page.small %}
-          <a href="{{ post.url | prepend: site.baseurl }}" class="small-post-link">
-            <p class="small-post-meta">{{ post.date | date: "%b %-d, %Y" }}</p>
-            <h3 class="h2 small-post-title">{{ post.title }}</h3>
-            <p class="small-post-summary">{{ post.summary }}</p>
-          </a>
+		{% if post.response %}
+		  {% comment %} do nothing {% endcomment %}
         {% else %}
           <a href="{{ post.url | prepend: site.baseurl }}" class="post-link">
             <p class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</p>

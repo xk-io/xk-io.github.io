@@ -18,3 +18,11 @@ sass:
 
 # Page settings
 page.small: false
+
+defaults:
+  -
+    scope:
+	  path: ""
+	  post: "posts"
+	values:
+	  response: false
