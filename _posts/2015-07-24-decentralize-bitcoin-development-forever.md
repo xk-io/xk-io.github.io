@@ -1,10 +1,11 @@
 ---
-title: Decentralizing Bitcoin Development Forever with Git, GitTorrent, Lighthouse, and BlocVoting
+#title: Decentralizing Bitcoin Development Forever with Git, GitTorrent, Lighthouse, and BlocVoting
+title: Decentralizing Bitcoin Development Forever
 date: 2015-07-23
 comments: true
 layout: post
 author: Max Kaye
-description: Using these four technologies I provide a framework for beginning the decentralization process around Bitcoin source code. This solves the 'tyrannical developer' problem.
+description: Using Git, GitTorrent, Lighthouse, and BlocVoting, I provide a framework for beginning the decentralization process around Bitcoin source code. This solves the 'tyrannical developer' problem.
 ---
 
 The recent block size debate in the Bitcoin community highlights a key flaw of the 'benevolent dictator' or oligarchical/technocratic models of open source software development.
