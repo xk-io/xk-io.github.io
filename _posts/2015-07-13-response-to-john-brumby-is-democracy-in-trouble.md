@@ -1,6 +1,6 @@
 ---
 title: Yes, Democracy Is in Trouble
-summary: [Is Democracy in Trouble?](http://democracyrenewal.edu.au/democracy-trouble-0)
+summary: Response to <a href="http://democracyrenewal.edu.au/democracy-trouble-0">Is Democracy in Trouble?</a>
 author: Max Kaye
 date: 2015-07-13
 postlet: true
