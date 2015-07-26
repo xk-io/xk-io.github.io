@@ -3,6 +3,7 @@ title: Introducing Factum Exchange
 layout: post
 author: Max
 date: 2013-12-22
+summary: Following on from Factum Money, I extend this idea to currency exchange and examine the types of distributed exchanges that are possible.
 ---
 
 # Introducing Factum Exchange
@@ -41,57 +42,57 @@ The Bitcoin community has felt the thorns of regulation for some time. Tradition
 
 The current system looks like this: (using MtGox as an example)
 
-```
-    TITLE: USING MTGOX TO CONVERT BETWEEN BITCOIN AND USD
-    ________________________________________________________________
-    BITCOIN 
-     P1-->MTG-------+                                +--MTG-->P2
-    ________________|________________________________|______________
-    USD             |                                |
-     P2==>MTG-----+ |                                | +--MTG==>P1   (insert joke here
-    ______________|_|________________________________|_|____________  about never get-
-                  | |                                | |              ting fiat out of
-                  | |                                | |              MtGox)
-    MTGOX         | |                                | |
-    ______________|_|________________________________|_|____________
-                  | +-M>P1(BTC)----#X->P2(BTC)-D>MTG-+ |
-                  +---M>P2(USD)-#---X->P1(USD)-D>MTG---+
-    ________________________________________________________________
-    
-    
-    LEGEND
-    -   : Path of Action, horizontal
-    |   : Path of Action, vertical
-    +   : Path of Action, corner; if two paths intersect, their direction is unchanged
-    .   : Path of Funds in Escrow
-    >   : Transaction to
-    #   : Order Placed
-    •   : Block Produced (alt 8)
-    X   : Exchange Matched
-    @   : Proof of Payment
-    &   : Escrow Unlock
-    =   : Stress on Path of Action (e.g. Regulation)
-    M   : Mint coins/tokens
-    D   : Destroy / Unmint
-    
-    Cn  : for an integer n, custom action, details provided with graph
-    
-    P1  : The First Party, always refers to the same people
-    Pn  : for any integer n, as above
-    En  : for any integer n, a special escrow account, details provided with graph
-    PN  : The Nth Party, can be anyone and can be a different party every time
-    ABC : Three letter abbreviation of a real world entity.
-    
-    RULES - The following excludes paths and transactions:
-    - When two icons appear next to each other they are simultaneous. Their order 
-        preserves causality.
-    - When two icons are in the same column they are simultaneous.
-    - If two icons are in adjacent columns but different rows they are not 
-        necessarily simultaneous.
-    - If two icons are adjacent and there is a third in a column shared with one of 
-        these icons, all three are simultaneous.
-```
-    
+<pre>
+TITLE: USING MTGOX TO CONVERT BETWEEN BITCOIN AND USD
+________________________________________________________________
+BITCOIN
+ P1-->MTG-------+                                +--MTG-->P2
+________________|________________________________|______________
+USD             |                                |
+ P2==>MTG-----+ |                                | +--MTG==>P1   (insert joke here
+______________|_|________________________________|_|____________  about never get-
+              | |                                | |              ting fiat out of
+              | |                                | |              MtGox)
+MTGOX         | |                                | |
+______________|_|________________________________|_|____________
+              | +-M>P1(BTC)----#X->P2(BTC)-D>MTG-+ |
+              +---M>P2(USD)-#---X->P1(USD)-D>MTG---+
+________________________________________________________________
+
+
+LEGEND
+-   : Path of Action, horizontal
+|   : Path of Action, vertical
++   : Path of Action, corner; if two paths intersect, their direction is unchanged
+.   : Path of Funds in Escrow
+>   : Transaction to
+#   : Order Placed
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+@   : Proof of Payment
+&   : Escrow Unlock
+=   : Stress on Path of Action (e.g. Regulation)
+M   : Mint coins/tokens
+D   : Destroy / Unmint
+
+Cn  : for an integer n, custom action, details provided with graph
+
+P1  : The First Party, always refers to the same people
+Pn  : for any integer n, as above
+En  : for any integer n, a special escrow account, details provided with graph
+PN  : The Nth Party, can be anyone and can be a different party every time
+ABC : Three letter abbreviation of a real world entity.
+
+RULES - The following excludes paths and transactions:
+- When two icons appear next to each other they are simultaneous. Their order
+    preserves causality.
+- When two icons are in the same column they are simultaneous.
+- If two icons are in adjacent columns but different rows they are not
+    necessarily simultaneous.
+- If two icons are adjacent and there is a third in a column shared with one of
+    these icons, all three are simultaneous.
+</pre>
+
 The regulatory efforts are applied to the fiat entry and exit points, with = indicating where those stresses are felt. The MtGox infrastructure requires value to be deferred into compatible tokens, which is the choke point in this system. If direct person to person transactions in USD were used instead, the regulator pressure would fall away. Unfortunately this isn't able to be checked from within the MtGox infrastructure, and thus relies on manual verification, in turn allowing for a number of attacks that make the system too burdensome to use.
 
 ### The First Distributed Exchange: Ripple
@@ -99,32 +100,32 @@ The regulatory efforts are applied to the fiat entry and exit points, with = ind
 A system such as Ripple looks like this:
 
 
-```
-    TITLE: USING RIPPLE TO CONVERT BETWEEN BITCOIN AND USD
-    __________________________________________________________
-    BITCOIN 
-     P1-->BTS---+                                 +-BTS->P2
-    ____________|_________________________________|___________
-    USD         |                                 |
-     P2==>BTS-+ |                                 | +-BTS=>P1
-    __________|_|_________________________________|_|_________
-              | |                                 | |
-              | |                                 | |
-    RIPPLE    | |                                 | |
-    __________|_|_________________________________|_|_________
-              | +--M>P1(BTC)-#----X>P2(BTC)-D>BTS-+ |
-              +----M>P2(USD)-----#X>P1(USD)-D>BTS---+
-    __________________________________________________________
-    
-    LEGEND
-    -|+ : Path of Action, horizontal,vertical,corner
-    >   : Transaction to
-    #   : Order Placed
-    X   : Exchange Matched
-    =   : Stress on Path of Action (e.g. Regulation)
-    M   : Mint coins/tokens
-    D   : Destroy / Unmint
-```
+<pre>
+TITLE: USING RIPPLE TO CONVERT BETWEEN BITCOIN AND USD
+__________________________________________________________
+BITCOIN
+ P1-->BTS---+                                 +-BTS->P2
+____________|_________________________________|___________
+USD         |                                 |
+ P2==>BTS-+ |                                 | +-BTS=>P1
+__________|_|_________________________________|_|_________
+          | |                                 | |
+          | |                                 | |
+RIPPLE    | |                                 | |
+__________|_|_________________________________|_|_________
+          | +--M>P1(BTC)-#----X>P2(BTC)-D>BTS-+ |
+          +----M>P2(USD)-----#X>P1(USD)-D>BTS---+
+__________________________________________________________
+
+LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+>   : Transaction to
+#   : Order Placed
+X   : Exchange Matched
+=   : Stress on Path of Action (e.g. Regulation)
+M   : Mint coins/tokens
+D   : Destroy / Unmint
+</pre>
 
 
 It is nearly identical to MtGox, and involves using a payment processor to cash in and out. Bitstamp (BTS) was chosen here as it is a 'gateway' into the Ripple system for both Bitcoin and USD. It can be replaced with any other gateway, though additional steps are required. Ultimately this provides no advantage over the traditional model (see MtGox, above) besides that there are more options to cash in and out (though you have to exchange Bitstamp-USD for OtherGateway-USD as the two aren't fungible). I guess you'd say it's better than MtGox, but not substantially.
@@ -134,85 +135,85 @@ It is nearly identical to MtGox, and involves using a payment processor to cash 
 This algorithm is taken from the [Contracts](https://en.bitcoin.it/wiki/Contracts) page.
 
 
-```
-    TITLE: SIMPLE CROSS CHAIN TRADE BETWEEN BITCOIN AND LITECOIN
-    _____________________________________
-    BITCOIN 
-     P1------X->E1-•-C1------C2-->P2
-    _________|___________________________
-    LITECOIN |
-     P2------X-------->E2-•->P1
-    _____________________________________
-    
-    LEGEND
-    -|+ : Path of Action, horizontal,vertical,corner
-    >   : Transaction to
-    •   : Block Produced (alt 8)
-    X   : Exchange Matched
-    
-    E1 and E2 are both transactions to the following output:
-        <Pubkey> OP_CHECKSIGVERIFY OP_HASH256 <HashOfX> OP_EQUAL
-    Redeemed by:
-        <X> <Sig>
-        
-    C1 - P1 tells P2 about the transaction
-    C2 - P1 tells P2 the secret (X) OR P1 spends the TX, making the secret public.
-```
+<pre>
+TITLE: SIMPLE CROSS CHAIN TRADE BETWEEN BITCOIN AND LITECOIN
+_____________________________________
+BITCOIN
+ P1------X->E1-•-C1------C2-->P2
+_________|___________________________
+LITECOIN |
+ P2------X-------->E2-•->P1
+_____________________________________
 
-    
+LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+>   : Transaction to
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+
+E1 and E2 are both transactions to the following output:
+    [Pubkey] OP_CHECKSIGVERIFY OP_HASH256 [HashOfX] OP_EQUAL
+Redeemed by:
+    [X] [Sig]
+
+C1 - P1 tells P2 about the transaction
+C2 - P1 tells P2 the secret (X) OR P1 spends the TX, making the secret public.
+</pre>
+
+
 Cross chain trade looks fairly simple, but in reality there is no market built behind it, so much of the communication is manual. This might be solved with some distributed layer over the top, but there is still the issue of P1 keeping X secret, locking funds away forever. There has been a suggested solution to this that involves timeout periods. This makes things a little more difficult:
 
 
-```
-    TITLE: ZERO-LOSS CROSS CHAIN TRADE BETWEEN BITCOIN AND LITECOIN
-    _______________________________________________
-    BITCOIN 
-     P1------X------C1------C3->E1--C5--•->P2
-    _________|_____/__\____/__\____/__\____________
-    LITECOIN |    /    \  /    \  /    \
-     P2------X--C0------C2------C4->E2----•->P1
-    _______________________________________________
-    
-    LEGEND
-    -|+ : Path of Action, horizontal,vertical,corner
-    >   : Transaction to
-    •   : Block Produced (alt 8)
-    X   : Exchange Matched
-    
-    E1 and E2 are both transactions to the following output:
-        OP_IF 
-            <PubkeyYou> OP_CHECKSIGVERIFY OP_HASH256 <HashOfX> 
-            OP_EQUALVERIFY OP_HASH256 <HashOfY> OP_EQUAL 
-        OP_ELSE 
-            2 <PubkeyYou> <PubkeyMe> 2 OP_CHECKMULTISIG 
-        OP_ENDIF
-    Redeemed by:
-        0 <Sig> <Sig> 
-            OR
-        1 <Y> <X> <Sig>
-        
-    The flow of information between the Cn events are shown with slashes.
-    C0 - P2 tells P1 <HashOfY>
-    C1 - P1 telling P2 the E1 transaction, and <HashOfX>, unsigned, and providing 
-         a reversal transaction R1.
-        
-        * R1 is locked for 48 hours
-        * Rn is a reversal transaction from En>Pn. It has a lock time far in the future, 
-          and far from the time the lock time of the other reversal, if it is known.
-        
-    C2 - P2 verifying E1, signing and returning R1, P2 also tells P1
-         about the E2 tx, unsigned, and provides R2.
-    
-        * R2 is locked for 24 hours
-    
-    C3 - P1 verifies E2, inspects R2, signs, and returns. P1 signs R1 and 
-         signs and broadcasts E1.
-    C4 - P2 verifies E1 has been broadcast, signs 
-         and broadcasts E2. P2 tells P1 <Y>
-    C5 - P1 tells P2 <X>, either explicitly or by spending the transaction
-```
+<pre>
+TITLE: ZERO-LOSS CROSS CHAIN TRADE BETWEEN BITCOIN AND LITECOIN
+_______________________________________________
+BITCOIN
+ P1------X------C1------C3->E1--C5--•->P2
+_________|_____/__\____/__\____/__\____________
+LITECOIN |    /    \  /    \  /    \
+ P2------X--C0------C2------C4->E2----•->P1
+_______________________________________________
 
-    
+LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+>   : Transaction to
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+
+E1 and E2 are both transactions to the following output:
+    OP_IF
+        [PubkeyYou] OP_CHECKSIGVERIFY OP_HASH256 [HashOfX]
+        OP_EQUALVERIFY OP_HASH256 [HashOfY] OP_EQUAL
+    OP_ELSE
+        2 [PubkeyYou] [PubkeyMe] 2 OP_CHECKMULTISIG
+    OP_ENDIF
+Redeemed by:
+    0 [Sig] [Sig]
+        OR
+    1 [Y] [X] [Sig]
+
+The flow of information between the Cn events are shown with slashes.
+C0 - P2 tells P1 [HashOfY]
+C1 - P1 telling P2 the E1 transaction, and [HashOfX], unsigned, and providing
+     a reversal transaction R1.
+
+    * R1 is locked for 48 hours
+    * Rn is a reversal transaction from En>Pn. It has a lock time far in the future,
+      and far from the time the lock time of the other reversal, if it is known.
+
+C2 - P2 verifying E1, signing and returning R1, P2 also tells P1
+     about the E2 tx, unsigned, and provides R2.
+
+    * R2 is locked for 24 hours
+
+C3 - P1 verifies E2, inspects R2, signs, and returns. P1 signs R1 and
+     signs and broadcasts E1.
+C4 - P2 verifies E1 has been broadcast, signs
+     and broadcasts E2. P2 tells P1 [Y]
+C5 - P1 tells P2 [X], either explicitly or by spending the transaction
+</pre>
+
+
 In this case the trade will never fail: after R2 becomes active it is unsafe for P1 provide the secret X. Thus, if P1 is unable to redeem E2 she can wait for R1 become active. By placing the burden of providing the secret on P2, the transaction with the first reversal is guaranteed to occur first.
 
 However, the cost of using this method is great; many confirmations are required for individuals to be certain they are safe executing the next step and there is a great deal of time for either party to renege on the transaction after the terms of exchange are set. Furthermore a reorganisation on one chain could lead to one party with both sides of the transaction.
@@ -224,40 +225,40 @@ None of these have been completed to my knowledge. They typically allow the crea
 Typically, a generic fiat exchange (GFiX) will take the following form:
 
 
-```
-    TITLE: GENERIC FIAT EXCHANGE (GFiX) - BITCOIN TO USD
-    ___________________________________________________
-    BITCOIN 
-     P1-->BTS---+                         +-BRK-->P2
-    ____________|_________________________|____________
-    USD         |                         |
-     P2==>BRK-+ |                         | +-BRK==>P1
-    __________|_|_________________________|_|__________
-              | |                         | |
-              | |                         | |
-    GFiX      | |                         | |
-    __________|_|_________________________|_|____________
-    BTC       | +-M>P1-#-•...•X&>P2-D>BRK-+ |
-              |               |             |        
-    __________|_______________|_____________|____________
-    USD       |               |             |       
-              +---M>P2---•-#-•X>P1--D>BRK---+
-    __________________________________________________
-    
-    LEGEND
-    -|+ : Path of Action, horizontal,vertical,corner
-    .   : Path of Funds in Escrow
-    >   : Transaction to
-    #   : Order Placed
-    •   : Block Produced (alt 8)
-    X   : Exchange Matched
-    &   : Escrow Unlock
-    =   : Stress on Path of Action (e.g. Regulation)
-    M   : Mint coins/tokens
-    D   : Destroy / Unmint
-    
-    BRK : Broker
-```
+<pre>
+TITLE: GENERIC FIAT EXCHANGE (GFiX) - BITCOIN TO USD
+___________________________________________________
+BITCOIN
+ P1-->BTS---+                         +-BRK-->P2
+____________|_________________________|____________
+USD         |                         |
+ P2==>BRK-+ |                         | +-BRK==>P1
+__________|_|_________________________|_|__________
+          | |                         | |
+          | |                         | |
+GFiX      | |                         | |
+__________|_|_________________________|_|____________
+BTC       | +-M>P1-#-•...•X&>P2-D>BRK-+ |
+          |               |             |
+__________|_______________|_____________|____________
+USD       |               |             |
+          +---M>P2---•-#-•X>P1--D>BRK---+
+__________________________________________________
+
+LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+.   : Path of Funds in Escrow
+>   : Transaction to
+#   : Order Placed
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+&   : Escrow Unlock
+=   : Stress on Path of Action (e.g. Regulation)
+M   : Mint coins/tokens
+D   : Destroy / Unmint
+
+BRK : Broker
+</pre>
 
 
 ### Existing and Future Factum Exchanges
@@ -268,21 +269,19 @@ Note: Marstercoin is a layer over Bitcoin (data stored in TXs on the Bitcoin net
 Note: The following may be incorrect. I've scraped together some information but details of the spec are pretty thin.
 
 
-```
-    TITLE: EXCHANGING BITCOIN FOR MASTERCOIN
-    _______________________________
-    BITCOIN 
-     P1----------C1#-•X-->P2 •
-    __________________|____________
-    MASTERCOIN        |   
-     P2--------#-----•X......•&>P1
-    _______________________________
-    
-    C1 - Buyer selects order to fill
+<pre>
+TITLE: EXCHANGING BITCOIN FOR MASTERCOIN
+_______________________________
+BITCOIN
+ P1----------C1#-•X-->P2 •
+__________________|____________
+MASTERCOIN        |
+ P2--------#-----•X......•&>P1
+_______________________________
 
-```
+C1 - Buyer selects order to fill
+</pre>
 
-    
 In english:
 
 * An order is placed on the Mastercoin network (sell)
@@ -298,30 +297,29 @@ One issue is the buyer (of MSC) is able to renege on the trade before it is comp
 Marketcoin is a hypothetical currency/market I've begun to set out [here](https://github.com/XertroV/MarketcoinWhitepaper)
 
 
-```
-    TITLE: EXCHANGING BITCOIN FOR MARKETCOIN - ANNOTATED
-           ASYMMETRIC EXCHANGE
-                +-- P1 places an order on the MKC network to buy (with pledge)
-                |    +-- Exchange matched, unacknowledged on bitcoin network
-                |    |     +-- P1 sends coins to P2 as agreed
-                |    |     |   +-- BTC block mined
-    _____________________________________
-    BITCOIN            +---------+
-     P1---------+----X-+-P1>P2 • |
-    ____________|____|___________|_______
-    MARKETCOIN  #    |           @
-     P2-----#-------•X.............•&>P1
-    _____________________________________
-            |        |           | +-- When an MKC block is mined,
-            |        |           |     the MKC in escrow is released to P1
-            |        |           +-- P1 provides proof of tx to MKC network
-            |        +-- MKC Block produced, exchange matched
-            |            P2's funds put in escrow     
-            +-- P2 places an order on the MKC network to sell 
+<pre>
+TITLE: EXCHANGING BITCOIN FOR MARKETCOIN - ANNOTATED
+       ASYMMETRIC EXCHANGE
+            +-- P1 places an order on the MKC network to buy (with pledge)
+            |    +-- Exchange matched, unacknowledged on bitcoin network
+            |    |     +-- P1 sends coins to P2 as agreed
+            |    |     |   +-- BTC block mined
+_____________________________________
+BITCOIN            +---------+
+ P1---------+----X-+-P1>P2 • |
+____________|____|___________|_______
+MARKETCOIN  #    |           @
+ P2-----#-------•X.............•&>P1
+_____________________________________
+        |        |           | +-- When an MKC block is mined,
+        |        |           |     the MKC in escrow is released to P1
+        |        |           +-- P1 provides proof of tx to MKC network
+        |        +-- MKC Block produced, exchange matched
+        |            P2's funds put in escrow
+        +-- P2 places an order on the MKC network to sell
+</pre>
 
-```
 
-    
 In english:
 
 * P2 places bid
@@ -347,52 +345,50 @@ An asymmetric exchange has different rules on both sides. In the case of Marketc
 As mentioned before, the Marketcoin graph:
 
 
-```
-    TITLE: EXCHANGING BITCOIN FOR MARKETCOIN
-           ASYMMETRIC EXCHANGE
-    _______________________________________
-    BITCOIN              +---------+
-     P1---------+------X-+-P1>P2 • |
-    ____________|______|___________|_______
-    MARKETCOIN  #      |           @
-     P2-----#---------•X.............•&>P1
-    _______________________________________
+<pre>
+TITLE: EXCHANGING BITCOIN FOR MARKETCOIN
+       ASYMMETRIC EXCHANGE
+_______________________________________
+BITCOIN              +---------+
+ P1---------+------X-+-P1>P2 • |
+____________|______|___________|_______
+MARKETCOIN  #      |           @
+ P2-----#---------•X.............•&>P1
+_______________________________________
+</pre>
 
-```
-
-    
 Using Marketcoin to move between currencies other than Marketcoin is a little more of a burden as the process must be repeated:
 
 
-```
-    TITLE: EXCHANGING BITCOIN FOR LITECOIN THROUGH MARKETCOIN
-           ASYMMETRIC EXCHANGE PASSTHROUGH
-    ___________________________________________________________________________
-    BITCOIN              +---------+
-     P1---------+------X-+-P1>P2 • |
-    ____________|______|___________|___________________________________________
-    MARKETCOIN  #      |           @       +--------#--•X.............•&>P3
-     P2-----#---------•X.............•&>P1-+  #         |           @
-    __________________________________________|_________|___________|__________
-    LITECOIN                                  |         | +---------+
-     P3---------------------------------------+---------X-+-P3>P1 •
-    ___________________________________________________________________________
-```
+<pre>
+TITLE: EXCHANGING BITCOIN FOR LITECOIN THROUGH MARKETCOIN
+       ASYMMETRIC EXCHANGE PASSTHROUGH
+___________________________________________________________________________
+BITCOIN              +---------+
+ P1---------+------X-+-P1>P2 • |
+____________|______|___________|___________________________________________
+MARKETCOIN  #      |           @       +--------#--•X.............•&>P3
+ P2-----#---------•X.............•&>P1-+  #         |           @
+__________________________________________|_________|___________|__________
+LITECOIN                                  |         | +---------+
+ P3---------------------------------------+---------X-+-P3>P1 •
+___________________________________________________________________________
+</pre>
 
 
 An ideal asymmetric exchange built into two cryptocurrencies looks like:
 
 
-```
-    TITLE: EXCHANGING BITCOIN FOR LITECOIN ON AN IDEAL ASYMMETRIC EXCHANGE
-    ______________________________
-    XCOIN 
-     P1-----------#--•X>P2
-    __________________|___________
-    YCOIN             |  
-     P2--------#-•....X..•&>P1
-    ______________________________
-```
+<pre>
+TITLE: EXCHANGING BITCOIN FOR LITECOIN ON AN IDEAL ASYMMETRIC EXCHANGE
+______________________________
+XCOIN
+ P1-----------#--•X>P2
+__________________|___________
+YCOIN             |  
+ P2--------#-•....X..•&>P1
+______________________________
+</pre>
 
 
 What is important is this is the only way this could happen. Bitcoin hosts the exchange and Litecoin 'reads' the exchange from the Bitcoin blockchain. This is about half-way to a symmetric exchange where both coins have both functionalities. We explore this graph in more detail later on.
@@ -404,33 +400,33 @@ There is a clear difference between Marketcoin and an ideal asymmetric exchange.
 In the counter-case that a foreign chain *is* aware of the local chain, we can offload buy orders to the foreign chain, which can then enable some escrow like function to guarantee trades are atomic. I call this knowledgable asymmetric exchange. However, to guarantee determinism in such an exchange, buy orders will only be matched once they are learnt about by the other chain, and can only be canceled with the permission of the other chain (they will either be cancelled or a trade will occur before the cancelation takes place).
 
 #### Combining Fiat Exchange with Factum Asymmetric Exchange
-    
+
 Consider a distributed Generic Fiat Exchange (GFiX). Often such an exchange will have a core cryptocurrency operating beneath the user-defined assets (think Ripples, BitShares, Freicoins, etc) and so should be compatible with a distributed cryptocurrency exchange. Then presume this chain also supports ignorant asymmetric exchange. In such a case it would be possible to buy arbitrary assets on the GFiX using Bitcoin in a trustless, multistep manner. In the best case where Xcoin supports asymmetric cross-chain trade in a similar way to Marketcoin and an asset market, you would experience the following process:
 
 
-```
-    TITLE: EXCHANGING BITCOIN FOR XCOIN-ASSET THROUGH XCOIN
-    __________________________________________________
-    BITCOIN              +---------+
-     P1---------+------X-+-P1>P2 • |
-    ____________|______|___________|__________________
-    XCOIN       #      |           @
-     P2-----#---------•X.............•&>P1---#-•X>P3    }
-    ____________________________________________|_____  } Walled off Market
-    XCOIN-ASSET                                 |       }
-     P3----------------------------------#-•...•X&>P1   }
-    __________________________________________________
-    
-    LEGEND
-    -|+ : Path of Action, horizontal,vertical,corner
-    .   : Path of Funds in Escrow
-    >   : Transaction to
-    #   : Order Placed
-    •   : Block Produced (alt 8)
-    X   : Exchange Matched
-    @   : Proof of Payment
-    &   : Escrow Unlock
-```
+<pre>
+TITLE: EXCHANGING BITCOIN FOR XCOIN-ASSET THROUGH XCOIN
+__________________________________________________
+BITCOIN              +---------+
+ P1---------+------X-+-P1>P2 • |
+____________|______|___________|__________________
+XCOIN       #      |           @
+ P2-----#---------•X.............•&>P1---#-•X>P3    }
+____________________________________________|_____  } Walled off Market
+XCOIN-ASSET                                 |       }
+ P3----------------------------------#-•...•X&>P1   }
+__________________________________________________
+
+LEGEND
+-|+ : Path of Action, horizontal,vertical,corner
+.   : Path of Funds in Escrow
+>   : Transaction to
+#   : Order Placed
+•   : Block Produced (alt 8)
+X   : Exchange Matched
+@   : Proof of Payment
+&   : Escrow Unlock
+</pre>
 
 
 #### Symmetric Exchange
@@ -439,9 +435,9 @@ A symmetric exchange is one where both networks run identical rule sets. Each ho
 
 Technically this is equivalent to two knowledgable asymmetric exchanges running on both chains.
 
-##### A 'brief' explanation of one possible symmetric exchange 
+##### A 'brief' explanation of one possible symmetric exchange
 
-Each market's deterministic execution is decided by the authoritative chain, based on best-effort updates shared between chains. 
+Each market's deterministic execution is decided by the authoritative chain, based on best-effort updates shared between chains.
 
 *Side note:* If you imagine a cryptocoin hosting 10 markets, not every market needs to be updated every block, in addition, preventing updates increases liquidity at the cost of transaction time. For fledgling, unpopular markets this may well be a positive thing, and evidence in favour of only including market updates for the markets you care about - after all, you'll need to be running those clients. In addition, a very flexible update method such as this lends itself to better compatibility with block chains progressing at different rates.
 
@@ -456,47 +452,46 @@ In the case of the 'bid' order book - the market the local coin has no authority
 Let us examine an ideal distributed exchange which operates exclusively on cryptocurrencies; and the path of value (for a Bitcoin/Litecoin trade) looks like:
 
 
-```
-    TITLE: EXCHANGING BITCOIN FOR LITECOIN ON AN IDEAL SYMMETRIC EXCHANGE
-    ______________________________
-    BITCOIN 
-     P1-----------#--•X>P2
-    __________________|___________
-    LITECOIN          |  
-     P2--------#-•....X..•&>P1
-    ______________________________
-    
-    OR:
-    ______________________________
-    BITCOIN 
-     P1--------#-•....X..•&>P2
-    __________________|___________
-    LITECOIN          |  
-     P2-----------#--•X>P1
-    ______________________________
+<pre>
+TITLE: EXCHANGING BITCOIN FOR LITECOIN ON AN IDEAL SYMMETRIC EXCHANGE
+______________________________
+BITCOIN
+ P1-----------#--•X>P2
+__________________|___________
+LITECOIN          |  
+ P2--------#-•....X..•&>P1
+______________________________
 
-```
+OR:
+______________________________
+BITCOIN
+ P1--------#-•....X..•&>P2
+__________________|___________
+LITECOIN          |  
+ P2-----------#--•X>P1
+______________________________
+</pre>
 
-    
+
 That is to say, in the first case, an order is placed on the Litecoin network (ask for BTC or bid LTC) and recorded in a block. At some other point an order is placed on the Bitcoin network (bid BTC or ask LTC) which overlaps with the previous order on the other blockchain. When this second order is recorded in a block, it is known to have matched with the order on the Litecoin network (deterministically) and is automatically sent (or assigned) to the receiving party. At the next block on the Litecoin network the trade is learned of and the other transaction is performed so the Litecoins are transferred to the receiving party.
 
 Moving form Xcoin to Zcoin through Ycoin - all of which support symmetric exchange:
 
 
-```
-    TITLE: EXCHANGING XCOIN FOR YCOIN FOR ZCOIN
-           SYMMETRIC EXCHANGE PASSTHROUGH
-    ________________________________________
-    XCOIN 
-     P1-----------#--•X>P2
-    __________________|_____________________
-    YCOIN             |  
-     P2--------#-•....X..•&>P1-#-•X>P3
-    ______________________________|_________
-    ZCOIN                         |
-     P3-----------------#---•.....X..•&>P1
-    ________________________________________
-```
+<pre>
+TITLE: EXCHANGING XCOIN FOR YCOIN FOR ZCOIN
+       SYMMETRIC EXCHANGE PASSTHROUGH
+________________________________________
+XCOIN
+ P1-----------#--•X>P2
+__________________|_____________________
+YCOIN             |  
+ P2--------#-•....X..•&>P1-#-•X>P3
+______________________________|_________
+ZCOIN                         |
+ P3-----------------#---•.....X..•&>P1
+________________________________________
+</pre>
 
 
 By voting on which market updates to accept (from which other cryptocurrencies) and which markets to run, it will be possible to create a dynamic mesh of markets, forming many possible paths between any cryptocurrencies. (In the worst situation, a coin can run an asymmetric market and use that to trade into and out of foreign block chains.)
@@ -508,50 +503,50 @@ Every novel technology developed will be hindered by regulation in a unique way.
 Lets have a look at that, shall we?
 
 
-```
-    TITLE: AUD -> CRYPTO-AUD -> BITCOIN
-    BANKING:
-    __________________________________________
-    AUD 
-     P1==>BRK---+                      +==>P2
-    ____________|______________________|______
-                |                      |
-    CRYPTO:     |                      |
-    ____________|______________________|______
-    CRYPTO-AUD  |                      |
-                +-M>P1--#-•X>P2--D>BRK-+                  
-    _______________________|__________________
-    BITCOIN                |         
-     P2------------#-•.....X...•&>P1                  
-    __________________________________________
-```
+<pre>
+TITLE: AUD -> CRYPTO-AUD -> BITCOIN
+BANKING:
+__________________________________________
+AUD
+ P1==>BRK---+                      +==>P2
+____________|______________________|______
+            |                      |
+CRYPTO:     |                      |
+____________|______________________|______
+CRYPTO-AUD  |                      |
+            +-M>P1--#-•X>P2--D>BRK-+
+_______________________|__________________
+BITCOIN                |
+ P2------------#-•.....X...•&>P1
+__________________________________________
+</pre>
 
-    
+
 This, however, will likely not be the first iteration. It is elegant, quick, and efficient, but there are likely to be many sticking points before that can be realised. Firstly, Bitcoin doesn't support knowledgeable asymmetric exchange, and there is a strong possibility that too much regulatory pressure will require CRYPTO-AUD to ship without an exchange. Therefore the *first* iteration might look something a little more like:
 
 
-```
-    TITLE: AUD -> CRYPTO-AUD -> MARKETCOIN -> BITCOIN
-    BANKING:
-    ______________________________________________________________________
-    AUD 
-     P1==>BRK---+                          +==>P2
-    ____________|__________________________|______________________________
-                |                          |
-    CRYPTO:     |                          |
-    ____________|__________________________|______________________________
-    CRYPTO-AUD  |                          |
-                +-M>P1--+--X-+->P2-•-D>BRK-+                 
-    ____________________|__|_|____________________________________________
-    MARKETCOIN          #  | +---------@       +--#-•X.............•&>P3
-     P2------------#------•X.............•&>P1-+ #   |  +-------@          
-    _____________________________________________|___|__|_________________
-    BITCOIN                                      |   |  |
-     P3------------------------------------------+---X--+->P1 •
-    ______________________________________________________________________
-```
+<pre>
+TITLE: AUD -> CRYPTO-AUD -> MARKETCOIN -> BITCOIN
+BANKING:
+______________________________________________________________________
+AUD
+ P1==>BRK---+                          +==>P2
+____________|__________________________|______________________________
+            |                          |
+CRYPTO:     |                          |
+____________|__________________________|______________________________
+CRYPTO-AUD  |                          |
+            +-M>P1--+--X-+->P2-•-D>BRK-+
+____________________|__|_|____________________________________________
+MARKETCOIN          #  | +---------@       +--#-•X.............•&>P3
+ P2------------#------•X.............•&>P1-+ #   |  +-------@
+_____________________________________________|___|__|_________________
+BITCOIN                                      |   |  |
+ P3------------------------------------------+---X--+->P1 •
+______________________________________________________________________
+</pre>
 
-    
+
 Not as pretty. Compared to a our current fiat exchanges, this doesn't look that appealing. That said, legally CRYPTO-AUD is far more comparable to a traditional payment processing system such as PayPal. By exploring the edge cases of regulation we can help find the inconsistencies and assist its evolution. An attack on Bitcoin by a Government will necessarily involve shutting down the flow of fiat into Bitcoin as much as possible. One strategy is to create useful technologies that are too similar to existing tech (PayPal, Visa) so we can stand on some very resilient legal precedents and standards if these systems are challenged. These middle ground crypto networks, then, cannot be made illegal without negatively effecting the current corporate monopoly because they are designed to resemble them so much. Whether that's possible is another matter.
 
 ## Conclusions
