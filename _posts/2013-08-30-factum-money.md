@@ -58,11 +58,4 @@ Generic IOUs (e.g.| e.g. Bitcoin    | use value
 paypal-us-dollars)|                 |
 </pre>
 
-
-| Deferred Value    | Direct Value    | |
-| -----------------|-------------|--------- |
-| commodity-backed money  | Commodity money | Has non-monetary use value |
-| ------------------|--------------------|----|
-| Fiat Money / Generic IOUs (e.g. US dollars or paypal-us-dollars) | Factum Money (e.g. Bitcoin) | No non-monetary use value |
-
 There's a great deal left to explore within this idea; of particular interest (which I'll explore in a follow up post) is what this actually *means* for Bitcoiners, and how we can predict and take advantage of this model. Cryptocurrency has many facets that have so far only been theoretically explored, in particular [perfect money laundering](http://zerocoin.org/), and distributed exchanges. I'll largely be exploring distributed exchanges in my next post.
