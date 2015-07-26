@@ -1,17 +1,17 @@
 ---
 title: Yes, Democracy Is in Trouble
-original_url: http://democracyrenewal.edu.au/democracy-trouble-0
-original_title: Is Democracy in Trouble?
+summary: [Is Democracy in Trouble?](http://democracyrenewal.edu.au/democracy-trouble-0)
 author: Max Kaye
 date: 2015-07-13
-response: true
+postlet: true
 layout: post
 ---
 
+Responding to: [Is Democracy in Trouble?](http://democracyrenewal.edu.au/democracy-trouble-0)
 
-Hi John, 
+Hi John,
 
-I think you make some excellent points and your suggestions are certainly sensible, but I also think there is a bigger beast to slay. The problems we have now are no more 'wicked' than any we have had in the past, however, we certainly need to adopt more modern *explanations* so that we can navigate their 'complex interdependencies'. I suggest the root of the problem comes from our obsession with the who-should-rule question, and our lack of innovation in policy-making, which can be improved once we understand a little more about where policy comes from. 
+I think you make some excellent points and your suggestions are certainly sensible, but I also think there is a bigger beast to slay. The problems we have now are no more 'wicked' than any we have had in the past, however, we certainly need to adopt more modern *explanations* so that we can navigate their 'complex interdependencies'. I suggest the root of the problem comes from our obsession with the who-should-rule question, and our lack of innovation in policy-making, which can be improved once we understand a little more about where policy comes from.
 
 Furthermore it does no more good to lament the issues we face: there will always be problems, and we will always have to solve them, and because of that we will always have such 'wicked' problems of increasing complexity, and 'contradictory ... requirements'. These point to nothing more than our systems themselves requiring improvement. Jones speaks of these 'wicked' problems  as though the *problem* is some how to blame, but there is nothing inherently wicked about the universe or the problems it challenges us with, and there is a simpler (and more reassuring) explanation: some of our *explanations* are wicked, and more particularly it is bad philosophy that helps create and propagate these wicked things. This is why "there is no definitive formulation", and why they have "no 'stopping rule'". However, there is hope because when the problem is now how *we* interact and the ideas *we* cultivate, and the question becomes "how do we do away with wicked explanations, and wicked policy?"
 
