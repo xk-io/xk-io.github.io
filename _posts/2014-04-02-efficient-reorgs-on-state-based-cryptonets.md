@@ -4,10 +4,11 @@ title:  Efficient Reorgs on Cryptonets
 author: Max Kaye
 date:   2014-04-02
 categories: state reorg cryptonet marketcoin
+summary: Thoughts on how to reorganize a blockchain under certain non-bitcoin conditions.
 ---
 
 Every [PoW](https://xk.io/glos/pow) driven cryptonet has a state. The state of Bitcoin (and forks) is the particular
-set of Unspent Transaction Outputs (UTXOs) at the time - essentially the set of all Bitcoin 
+set of Unspent Transaction Outputs (UTXOs) at the time - essentially the set of all Bitcoin
 able to be spent.
 
 When a new block arrives, the usual process to update the state is simple:
@@ -25,7 +26,7 @@ However, what happens when a new block arrives causing a [reorganisation](https:
 
 {% highlight text %}
 .       3a← 4a    <-- 3a and 4a are not in the main chain currently
-      ↙ 
+      ↙
 1 ← 2 ← 3 ← 4     <-- 3 and 4 are in the main chain
 
 > 5a arrives, causing the reorg:
@@ -33,7 +34,7 @@ However, what happens when a new block arrives causing a [reorganisation](https:
 1 ← 2 ← 3a← 4a← 5a   <-- New main chain
       ↖
         3 ← 4        <-- Old main chain, 3 and 4 no longer in the main chain
-        
+
 In this case block #2 was the lowest common ancestor (a pivot point)
 of the two competing chains 3a->5a and 3->4.
 {% endhighlight %}
@@ -59,12 +60,12 @@ What happens, though, when we move to a cryptonet that only operates on balances
 use the input/output system of Bitcoin?
 
 Well, provided we're recording every transaction it's quite simple. A transaction moving
-`X` coins from `A` to `B` results in `A-=X` and `B+=X`. That is trivial to reverse. However, the 
+`X` coins from `A` to `B` results in `A-=X` and `B+=X`. That is trivial to reverse. However, the
 caveat is that we must record every transaction. Once we start including complex mechanisms
-within the protocol that produce transactions that are not recorded but simply implied, we 
-can no longer play time 'backwards' as `S[m]` depends on `S[m-1]` and without knowing `S[m-1]` to 
-calculate the implied transactions, we can't play time backwards. Of course, if we know `S[m-1]` 
-we don't need to do any of this anyway, so we're sort of stuck. 
+within the protocol that produce transactions that are not recorded but simply implied, we
+can no longer play time 'backwards' as `S[m]` depends on `S[m-1]` and without knowing `S[m-1]` to
+calculate the implied transactions, we can't play time backwards. Of course, if we know `S[m-1]`
+we don't need to do any of this anyway, so we're sort of stuck.
 Examples of this sort of mechanism can be found in the way contracts create
 transactions in Ethereum and the market evaluation in Marketcoin.
 
@@ -76,12 +77,12 @@ So, we can see that we have a problem.
 ## Efficiently remembering states
 
 The intuitive solution (to me, at least) is to know *some* but not all states at strategic
-intervals between the genesis block and the current head. When a reorg of length `n` 
+intervals between the genesis block and the current head. When a reorg of length `n`
 occurs, the network has already committed to evaluating `n` new states. I define 'efficient'
-here to mean evaluating no more than `2n` new states (in the worst case). Unfortunately, 
+here to mean evaluating no more than `2n` new states (in the worst case). Unfortunately,
 this means we'll need to remember about `2*log(2,h)` states, where `h` is the height of the
 chain head. All the UTXOs in Bitcoin take up a few hundred meg of RAM, so for 500,000 blocks
-we're looking at no more than 40 states, but that's still ~10 GB of space (by Bitcoin's 
+we're looking at no more than 40 states, but that's still ~10 GB of space (by Bitcoin's
 standards) which isn't ideal. It's unlikely that we'll see long reorganisations, but we'd still
 be storing half of the figures mentioned above, which, while better, isn't perfect.
 
@@ -170,7 +171,5 @@ than 15, which isn't a particularly great optimisation. (When we have events lik
 [Fork of March 2013](https://bitcoin.org/en/alert/2013-03-11-chain-fork) we would like clients
 to adjust quickly and efficiently).
 
-I have some ideas about state-deltas to try and solve this issue (which is 
+I have some ideas about state-deltas to try and solve this issue (which is
 ungood, but not doubleplusungood) but that can wait for a future post.
-
-
