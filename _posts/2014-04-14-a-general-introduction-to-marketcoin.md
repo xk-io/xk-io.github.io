@@ -2,8 +2,9 @@
 layout: post
 title:  A General Introduction to Marketcoin
 author: Max Kaye
-date:   2014-04-14 00:00:00
+date:   2014-04-14
 categories: marketcoin grachten
+summary: Short less technical description of Marketcoin.
 ---
 
 Originally published at [eudemonia.io](http://eudemonia.io/2014/04/a-general-introduction-to-marketcoin.html).
