@@ -5,7 +5,7 @@ date: 2015-07-23
 comments: true
 layout: post
 author: Max Kaye
-summary: Using Bitcoin, Git, GitTorrent, and BlocVoting, I propose a method to find consensus on canonical source code for the Bitcoin network. This solves the 'tyrannical developer' problem.
+summary: Using Bitcoin, Git, GitTorrent, and BlocVoting, I propose a method to find consensus on canonical source code for the Bitcoin network.
 ---
 
 ## Introduction
