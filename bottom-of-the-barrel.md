@@ -11,12 +11,14 @@ thoughts:
 
 ------
 
-> (on returning rather quickly, carrying a bag of paper aeroplanes, 22:30)
-> max: i return from an evening of learning
-> other: any what it is that you have learned
-> max: that there is a reason science is not done at night
-> other: and why is that
-> max: because it is dark
+12/8/2015
+
+> (on returning rather quickly, carrying a bag of paper aeroplanes, 22:30) <br>
+> max: i return from an evening of learning <br>
+> other: any what it is that you have learned <br>
+> max: that there is a reason science is not done at night <br>
+> other: and why is that <br>
+> max: because it is dark <br>
 
 i folded some paper aeroplanes, and tried to go down to the park to test them out, but it was late at night and i couldn't see anything. so i came home.
 
