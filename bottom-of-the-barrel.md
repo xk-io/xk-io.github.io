@@ -7,7 +7,17 @@ permalink: /bottom-of-the-barrel/
 layout: page
 ---
 
-thoughts:
+------
+
+14/08/2015
+
+5 to 20 words: it's so easy to make money, but not for everyone. i'm "lucky".
+
+------
+
+13/08/2015
+
+my 5 - 20 word story for the day: got angry at people, but only because i was angry with myself.
 
 ------
 
