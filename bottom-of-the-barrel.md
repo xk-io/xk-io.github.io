@@ -7,6 +7,12 @@ permalink: /bottom-of-the-barrel/
 layout: page
 ---
 
+-----
+
+18/8/2015
+
+5-20: Enjoyed a the company of unknowns. Turned out they were googlers. Wasn't much a surprise after that.
+
 ------
 
 14/08/2015
