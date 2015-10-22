@@ -2,7 +2,7 @@
 title: Factum Money
 layout: post
 author: Max
-date: {}
+date: 2013-08-30
 summary: "I propose Bitcoin is a new type of money, which I dub Factum Money."
 published: true
 ---
