@@ -2,9 +2,11 @@
 title: Factum Money
 layout: post
 author: Max
-date: 2013-08-30
-summary: I propose Bitcoin is a new type of money, which I dub Factum Money.
+date: {}
+summary: "I propose Bitcoin is a new type of money, which I dub Factum Money."
+published: true
 ---
+
 
 Bitcoin is a disruptive technology, and since time immemorial disruptive technologies have challenged our existing theories and demanded improvement. I'm not going to beat around the bush trying to make Bitcoin conform to our existing schemas. We need to rethink what makes *types* of money that particular type; not look into why Bitcoin can function as a currency - that is already well understood. I'll outline what I think are the important constituents of money that help differentiate them today. We'll then look into how Bitcoin fits in, hopefully in such a way that convinces you Bitcoin is truly novel.
 
@@ -48,14 +50,14 @@ To gain an intuitive understanding of what this really means, let us diverge fro
 Filling in the blank, we now we have a table that looks like this:
 
 <pre>
-Deferred Value    | Direct Value    |
--------------------------------------------
-commodity-backed  | Commodity       | Has non-monetary
-Money             | Money           | use value
+Deferred Value     | Direct Value    |
 --------------------------------------------
-Fiat Money        | Factum Money    | No non-monetary
-Generic IOUs (e.g.| e.g. Bitcoin    | use value
-paypal-us-dollars)|                 |
+commodity-backed   | Commodity       | Has non-monetary
+Money              | Money           | use value
+---------------------------------------------
+Fiat Money         | Factum Money    | No non-monetary
+Generic IOUs (e.g. | e.g. Bitcoin    | use value
+paypal-us-dollars) |                 |
 </pre>
 
 There's a great deal left to explore within this idea; of particular interest (which I'll explore in a follow up post) is what this actually *means* for Bitcoiners, and how we can predict and take advantage of this model. Cryptocurrency has many facets that have so far only been theoretically explored, in particular [perfect money laundering](http://zerocoin.org/), and distributed exchanges. I'll largely be exploring distributed exchanges in my next post.
