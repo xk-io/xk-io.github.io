@@ -8,12 +8,9 @@ permalink: /about/
 
 <img src="http://www.gravatar.com/avatar/9e9fdbd02d59a6f9410d4a563393ed29?s=200" class="left" style="width: 200px; padding: 10px 30px 15px 0;">
 
-Max Kaye is an Aussie with a passion for Bitcoin. 
+Max is passionate about improving the world to the best of his ability. He is a software developer and blockchain consultant. His educational background is in science, mathematics, and information systems, though his strong interests in economics, political philosophy, disruptive startups, and theory of knowledge have provided a strong foundation across the board.
 
-He currently works as a software architect and developer, and occasionally writes in his free time on subjects within the union of computer science and economics. 
-An aspiring social entrepreneur; Max seeks growth in culture and society over account balances, and looks forward to the novel opportunities 
-afforded within a Bitcoin based economy. Currently he volunteers for the Bitcoin Association of Australia, filling the role of Treasurer on the committee. 
-His current primary interest is inter-chain distributed markets.
+Max desires to use and build new technology to enable greater civic involvement, democratic potential, and personal empowerment. His utmost commitment is to the creation of new options, and the protection of our methods of correcting mistakes. He prefers to use the oxford comma.
 
 #### Content
 
