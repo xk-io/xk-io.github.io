@@ -3,7 +3,6 @@ title: Notes on FB ads
 summary: Just some notes on FB ads I wrote to someone once
 author: Max Kaye
 date: 2016-05-28
-postlet: true
 layout: post
 ---
 
