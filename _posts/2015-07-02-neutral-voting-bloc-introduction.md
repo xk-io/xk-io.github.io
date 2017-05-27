@@ -1,5 +1,5 @@
 ---
-title: \[Video\] Neutral Voting Bloc Introduction
+title: (Video) Neutral Voting Bloc Introduction
 author: Max Kaye
 summary: On July 2nd I livestreamed a presentation about the Neutral Voting Bloc hosted by the Melbourne Bitcoin Technology Center.
 layout: post
