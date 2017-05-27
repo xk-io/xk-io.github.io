@@ -44,7 +44,7 @@ Given that _'who should rule?'_ is _'who or what is the authoritative source of 
 At a fundamental level Issue Based Direct Democracy (IBDD) attempts to acknowledge that there is no authority on good policy (or knowledge). In competing democratic systems, the answer is often in the form:
 
 * The party or parties elected through a given electoral system. (Representative Democracy (RD))
-* The people, or "the will of the people". This could be put more exactly: "the source of good policy is the measurement of public opinion where each voter treated equally." (Pure Direct Democracy (DD) and Liquid Democracy (LD))
+* The people, or "the will of the people". This could be put more exactly: "the source of good policy is the measurement of public opinion where each voter is treated equally." (Pure Direct Democracy (DD) and Liquid Democracy (LD))
 * The groups able to purchase the most votes given a quadratic pricing relationship (Quadratic Voting)
 
 While IBDD is a form of direct democracy, we do not claim that any one source of policy is particularly better than another. Rather, we reason through the process a little differently.
