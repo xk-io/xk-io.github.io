@@ -3,6 +3,7 @@ author: Max Kaye
 date: 2017-05-27
 layout: post
 title: IBDD as an embodiment of Popper's Criterion
+summary: I argue that not only does IBDD satisfy Popper's criterion, but can also be seen as an embodiment of it due to its roots in fallibilism.
 ---
 
 In 1960 Popper published his paper _Knowledge without Authority_ where he conjectured that the central question of political theory should not be "Who should rule?" but something entirely different.
