@@ -6,7 +6,7 @@ date: 2013-12-22
 summary: Following on from Factum Money, I extend this idea to currency exchange and examine the types of distributed exchanges that are possible.
 ---
 
-# Introducing Factum Exchange
+Note: this post is easier to read [on GitHub](https://github.com/xk-io/xk-io.github.io/blob/master/_posts/2013-12-22-factum-exchange.md) due to the fixed width ascii diagrams.
 
 In my [first post](FactumMoney.md) in the factum series I looked at Factum Money, a new category of money which has no non-financial use (or if there is a non-financial use, it is a distance second when ranked by utility), and has no extrinsic requirement to hold value. That is to say, the main utility of Factum Money is as money, and we can see this by looking at the properties of said money and *nothing more*.
 
