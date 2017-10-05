@@ -1,0 +1,21 @@
+---
+layout: post
+---
+
+{% if page.ytid and page.slides and page.yttitle %}
+
+<p>
+    <a href="{{ page.slides }}">Slides</a>
+</p>
+
+<p>
+    <a href="https://www.youtube.com/watch?v={{ page.ytid }}" title="{{ page.yttitle }}">
+        <img src="http://img.youtube.com/vi/{{ page.ytid }}/0.jpg" alt="{{ page.yttitle }}">
+    </a>
+</p>
+
+{% else %}
+
+<h2>Error: please define variables `ytid`, `yttitle`, and `slides`</h2>
+
+{% endif %}
