@@ -7,3 +7,11 @@
 @import "basscss";
 @import "main";
 @import "solarized-dark";
+
+em {
+  color: $highlight;
+}
+
+strong {
+  color: $highlight;
+}
