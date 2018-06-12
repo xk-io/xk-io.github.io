@@ -6,9 +6,9 @@ permalink: /stuff-worth-watching/
 
 Legend: 
 
-* <date consumed> - <title>, <author> (<publication year>) <link>
+* \<date consumed\> - \<title\>, \<author\> (\<publication year\>) \<link\>
   * commentry (optional)
-  * update <date>: some update (optional)
+  * update \<date\>: some update (optional)
   * tags: thing one, thing two, another thing
   
 # really good stuff
