@@ -13,6 +13,10 @@
 
 */
 
+$highlight: #a81717;
+$border-highlight: #a8171760;
+$hover-highlight: darken($highlight, 20%); 
+
 body {
   font-family: "Merriweather", "PT Serif", Georgia, "Times New Roman", serif;
 }
@@ -63,13 +67,13 @@ body {
 
 .site-header nav a {
   font-size: 1rem;
-  color: #666;
+  color: $highlight;
 }
 
 .site-header nav a:hover {
-  color: #444;
+  color: $hover-highlight;
   opacity: 1;
-  border-bottom: 2px solid #444;
+  border-bottom: 2px solid $hover-highlight;
 }
 
 .site-nav a + a {
@@ -89,7 +93,7 @@ body {
 }
 
 .related-post-title {
-  border-bottom: thin solid #f3f3f3;
+  border-bottom: thin solid $border-highlight;
 }
 
 .posts {
@@ -99,7 +103,7 @@ body {
 .posts .post {
   margin-bottom: 0.75em;
   padding-bottom: .375em;
-  border-bottom: thin solid #f3f3f3;
+  border-bottom: thin solid $border-highlight;
 }
 
 .posts .post:last-child {
@@ -128,7 +132,7 @@ body {
   transition: all 0.2s ease-in-out;
   background: #fafafa;
   border-radius: 0.1875em;
-  border: 1px solid #f3f3f3;
+  border: 1px solid $border-highlight;
   color: #333333;
   padding: 1em 1.5em;
 }
@@ -224,7 +228,7 @@ pre {
 blockquote {
   padding: 1.33em;
   font-style: italic;
-  border-left: 5px solid #7a7a7a;
+  border-left: 5px solid $hover-highlight;
 }
 
 blockquote footer {
@@ -321,7 +325,7 @@ h6,
   .posts .post {
     margin-bottom: 1.333em;
     padding-bottom: 0.666em;
-    border-bottom: thin solid #f3f3f3;
+    border-bottom: thin solid $border-highlight;
   }
 
   .posts .post:last-child {
@@ -406,7 +410,7 @@ h6,
   .posts .post {
     margin-bottom: 2.666em;
     padding-bottom: 1.333em;
-    border-bottom: thin solid #f3f3f3;
+    border-bottom: thin solid $border-highlight;
   }
 
   .posts .post:last-child {
@@ -417,7 +421,7 @@ h6,
 }
 
 footer {
-  border-top: thin solid #f3f3f3;
+  border-top: thin solid $border-highlight;
 }
 
 footer,
