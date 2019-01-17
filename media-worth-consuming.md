@@ -27,6 +27,8 @@ Legend:
   
 # good stuff
 
+* 2019-01-17 - I started a github repo called 'awesome-notes' where I'm going to note things I want to link back to or make publicly accessibly easily. [https://github.com/XertroV/awesome-notes](https://github.com/XertroV/awesome-notes/blob/master/README.md)
+
 * 2018-06-12 - *The $30,000 pocket dial*, Louis Rossmann (2013) https://www.youtube.com/watch?v=MyZnKjFWrxo
   * it's important to go through these sorts of journeys. they butt up against reality, and
     you're forced to reconsider yourself and your ideas in search of improvement. 
