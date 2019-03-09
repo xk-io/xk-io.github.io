@@ -41,4 +41,4 @@ Legend:
 
 # other stuff
 
-* (empty)
+* https://twitter.com/patio11/status/1103903715046486016 - ask in job interview (as interviewee) how hard it is to buy a $50 book
