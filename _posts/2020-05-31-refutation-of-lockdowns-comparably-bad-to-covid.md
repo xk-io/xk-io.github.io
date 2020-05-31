@@ -32,6 +32,7 @@ Since (1) contradicts the principle of optimism it is not the case^2. (2) must e
 So: (1) is wrong. (2) might be right, but there's no reason it needs to be if (3). If not (3) then (2), which means we don't have much time left.
 
 [1]: Not necessarily if you’re reading this via [FI](https://fallibleideas.com/) – I just don’t know enough to claim that.
+I mean there's the chance an good idea comes from elsewhere, I just don't have a good reason to believe that atm given the audience I predict.
 
 [2]: I mean it might be that the principle of optimism is wrong, but we’d need some pretty extraordinary reasoning (or: that’s my suspicion).
 
