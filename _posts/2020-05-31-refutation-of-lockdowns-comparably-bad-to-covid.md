@@ -2,6 +2,7 @@
 title: Refutation of the idea that lockdowns are comparably bad to an unmitigated pandemic, OR evidence of humanity as a failed civilisation.
 author: Max Kaye
 layout: post
+postlet: true
 date: 2020-05-31
 summary: >
   Basically: the title. I draw 3 conclusions from the thesis, either concluding the thesis is wrong, lockdowns are not comparably bad (they are preferable), or, finally, that we're doomed. There are _some_ outs, I just don't know of anyone holding both a belief in an out and the thesis statement (I suspect they're contradictory anyway). Admittedly this is a bit raw, but I think it's good enough to put out for criticism.
