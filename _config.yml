@@ -20,6 +20,9 @@ sass:
 # Page settings
 page.small: false
 
+talkyard_server_url: https://comments-for-xk-io.talkyard.net
+talkyard_script_url: https://c1.ty-cdn.net/-/talkyard-comments.min.js
+
 defaults:
   -
     scope:
