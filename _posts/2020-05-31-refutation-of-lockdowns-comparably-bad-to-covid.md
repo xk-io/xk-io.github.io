@@ -5,10 +5,12 @@ layout: post
 postlet: true
 date: 2020-05-31
 summary: >
-  Basically: the title. I draw 3 conclusions from the thesis, either concluding the thesis is wrong, lockdowns are not comparably bad (they are preferable), or, finally, that we're doomed. There are _some_ outs, I just don't know of anyone holding both a belief in an out and the thesis statement (I suspect they're contradictory anyway). Admittedly this is a bit raw, but I think it's good enough to put out for criticism.
+  [Edit 2020-08-03: This is poor writing. I am considering analysing it.] Basically: the title. I draw 3 conclusions from the thesis, either concluding the thesis is wrong, lockdowns are not comparably bad (they are preferable), or, finally, that we're doomed. There are _some_ outs, I just don't know of anyone holding both a belief in an out and the thesis statement (I suspect they're contradictory anyway). Admittedly this is a bit raw, but I think it's good enough to put out for criticism.
 ---
 
-Edit: this isn't written well enough, and I intend to move this to a category off the main page in the near future.
+Edit 2020-08-03: I don't stand by this article. I think it's poorly written, and on a subject I don't know enough about. I'm glad I wrote it because it's been part of my progression to taking ideas (and seeking their improvement) more seriously. I've left it basically untouched besides these edits for posterity's sake.
+
+Edit (June): this isn't written well enough, and I intend to move this to a category off the main page in the near future.
 
 I could be wrong, but if I am I don't know why, so please [enlighten me](https://github.com/xk-io/xk-io.github.io/issues/5). As it stands, this feels robust to me atm.
 Comments/discussion: <https://github.com/xk-io/xk-io.github.io/issues/5> (FI link once posted)
