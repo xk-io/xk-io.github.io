@@ -21,5 +21,5 @@ So I'm thinking about potential new things to use for a site.
 
 I want to migrate everything, have a large amount of customizability WRT posting, and it should do comments well. Building stuff is okay if it's feasible.
 
-Oh, and it shouldn't have silly issues like jekyll does (e.g. sorting a list of pages can fail if they don't all have a field, e.g. `date` in their frontmatter; it's hard to provide a default, and even if they are present on all pages, you can't sort them if some of them are `Date`s and some are `String`s b/c Ruby doesn't know how to sort them).
+Oh, and it shouldn't have silly issues like jekyll does (e.g. sorting a list of pages can fail if they don't all have a field, e.g. `date`, in their frontmatter; it's hard to provide a default if `date` is missing, and even if it is present on all pages, you can't sort the pages by `date` if some of the values are `Date`s and some are `String`s b/c Ruby doesn't know how to).
 
