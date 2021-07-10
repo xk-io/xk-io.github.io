@@ -4,36 +4,44 @@ title: About
 permalink: /about/
 ---
 
-#### Bio
+### Bio
 
 <img src="http://www.gravatar.com/avatar/9e9fdbd02d59a6f9410d4a563393ed29?s=200" class="left" style="width: 200px; padding: 10px 30px 15px 0;">
 
-Max is the co-founder of Flux and XO.1, two organisations created to democratise the world.
-Flux is a political party advocating a new form of democracy: Issue Based Direct Democracy; a system incentivising meaningful and productive engagement delivered via blockchain.
-XO.1 is a startup developing SecureVote - a decentralised governance solution geared towards
-governance for crypto-token ecosystems and general elections.
+I am an amateur philosopher practicing the school of [Critical Fallibilsm](https://criticalfallibilism.com). My favorite philosophy topics are: epistemology, learning, systems design, communication, morality, project planning and business, and general life skills and attitudes. I spent the last half of 2020 improving my thinking methods via (commercial) one-on-one philosophy tutoring from Elliot Temple. Those [52 tutorials (~100 hrs) are available free on YouTube](https://www.youtube.com/playlist?list=PLKx6lO5RmaetREa9-jt2T-qX9XO2SD0l2) and you can read [my "learning FI" site](https://xertrov.github.io/fi/) and my [microblog](https://curi.us/2380) to see the philosophy work I was doing at that time. The tutorials started with my goal of improving my writing quality, but they covered a very wide range of topics, like grammar, procrastination, social dynamics (e.g. analysing + understanding lies and dishonesty), [yes/no philosophy (epistemology)](https://www.yesornophilosophy.com/), learning methods, and having successful discussions.
 
-Max is passionate about improving the world through Fallibilism, Economics, and Science. 
-He is a software developer and blockchain engineer. 
-His educational background is in science, mathematics, 
-and information systems, though his strong interests in economics, 
-political philosophy, disruptive startups, and theory of knowledge provide a strong foundation across the board.
+As a result of the improvements to my thinking methods, in January 2021 I [unendorsed all my previous ideas](https://www.youtube.com/watch?v=_Hd1AmLPEyA&t=418s). That means that I revoked my implicit endorsement of projects, ideas, opinions, etc that I had previously worked on, advocated, promoted, etc. There's more details in the above-linked video. This *about* page was sorely out-of-date prior to the update on 11th July 2021. You can [see previous versions on github](https://github.com/xk-io/xk-io.github.io/commits/master/about.md).
 
-Max desires to use and build new technology to enable greater civic involvement, 
-democratic potential, and personal empowerment. His utmost commitment is to the creation of 
-new knowledge and new options. 
-He believes that all moral truths flow from the moral imperative to protect of our methods of correcting mistakes. 
-He prefers to use the oxford comma.
+For work, I do mostly software stuff. I'm pretty good at that, generally; you can [check out my github profile if you like](https://github.com/xertrov). I've built [sophisticated systems of smart contracts](https://github.com/secure-vote/sv-light-smart-contracts) ([**with 99.7% test coverage**](https://coveralls.io/github/secure-vote/sv-light-smart-contracts?branch=master)) as the backend for a secure online-voting SaaS product. I've built [sophisticated IaC cloud systems](https://github.com/voteflux/voting-alpha) with bespoke [advanced](https://github.com/voteflux/voting-alpha/blob/master/stack/nested/sv-chaincode-loader.yaml) [automation](https://github.com/voteflux/voting-alpha/blob/master/stack/cr/chaincode/chaincode.py) and [devops tools](https://github.com/voteflux/voting-alpha/blob/master/manage). [SPAs](https://github.com/voteflux/THE-APP) and [webapps](https://github.com/secure-vote/sv-voting-mvp/tree/master/web/src/SecureVote/SPAs/SwarmMVP) in Elm, Purescript, and Typescript (VueJS) with features like [signature input](https://github.com/voteflux/THE-APP/blob/1699bee91d0e0b62309ea98ab7f6ff89ee9ceb56/packages/ui/src/components/Volunteers/NDA/NdaStatusAndSign.vue) and [PDF generation](https://github.com/voteflux/THE-APP/blob/1699bee91d0e0b62309ea98ab7f6ff89ee9ceb56/packages/lib/pdfs/nda/generatePdf.ts), [headless browser automation](https://github.com/voteflux/THE-APP/blob/1699bee91d0e0b62309ea98ab7f6ff89ee9ceb56/packages/ui/static/anon_validation.html#L85), and [crypto stuff like auditing an on-chain election](https://github.com/secure-vote/sv-auditor/blob/master/src/SV/AuditWeb.purs).
 
-#### Content
+I am very comfortable learning new languages, frameworks, toolkits, etc. I have a strong preference towards safe programming techniques. Some examples: rich static types (e.g. Haskell, Purescript); well integrated functional techniques (e.g. Rust); unique compiler-level safety (e.g. Rust, Elm); and declarative frameworks (e.g. Cloudformation/IaC, Tailwind CSS). I really like type-level programming and am disappointed at the lack of support for it in languages like Rust. I think things like higher-kinded types, functional dependencies, and type-level rows are *incredibly* powerful, but the current implementations and tooling are ultimately lacking, making the act of doing type-level programming harder than it needs to be. There are some exceptions to my preference for safe languages, too. I quite like Ruby and Rails (though have some criticisms, too), and I have a new-found appreciation for SQL. I don't like javascript much, but it's not so bad anymore with modern ecmascript and typescript. I don't hate it.
+
+I contributed an in-depth chapter to [Data61's *Architecture for Blockchain Applications* textbook](https://link.springer.com/chapter/10.1007/978-3-030-03035-3_13) about the smart contract architecture that I used for SecureVote's backend.
+
+My two most well-known past projects are likely [Flux] and [SecureVote].
+
+Flux is a political party I founded in 2015 to introduce better methods of doing democracy. Particularly, I invented a new way to do democracy -- *Issue Based Digital Democracy* (IBDD) -- built around foundational concepts from epistemology and free market economics such as error correction, cycles of conjecture and criticism, specialization and trade, division of labor, comparative advantage, and arbitrage. Flux ran in state and federal elections (in Australia) in 2016, 2017, 2019, and 2020.
+
+SecureVote is a startup (in indefinite hiatus), founded in 2016, that produces secure online voting software and infrastructure. We own [a patent on the most space-efficient method](https://patents.google.com/patent/US20190371106A1/en) of secure, online, p2p secret ballot. In 2017 I publicly ran [a 24 hr stress test](https://www.reddit.com/r/Bitcoin/comments/5xkvc1/psa_were_running_a_stress_test_of_our_blockchain/) of our prototype high-capacity voting architecture -- this achieved 1.6 billion votes anchored to the Bitcoin blockchain and was able to be audited by the public. Based on those results, a 2016 15" MacBook Pro would have capable of processing up to 16 billion votes in 24 hours, i.e., the 1.6 billion-vote stress test used approximately 10% of that macbook's computational capacity on the bottleneck task: signature validation (I guess mb it would thermal throttle, tho 🤨).
+
+Some other past projects of mine:
+
+##### BitChomp Mining Pool (2011)
+
+I ran a NMC/BTC mining pool (BitChomp) for a short while in 2011. That died after the pool became insolvent due to a repeating-payments bug in my BTC payout code. For whatever reason the same code worked fine for NMC payouts, but BTC payouts encountered an exception between the *send BTC tx* and *record the payout in the DB* steps. The regular cronjob to trigger payouts meant that (by the time I woke up) BitChomp's first Bitcoin mining payouts (about ~7-8 BTC out of 50 BTC reward) had been sent to miners 6 times over until the wallet was drained. The reward distribution model (PPLNS, or SMPPS, mb) meant that the pool was able to build up a buffer of excess reward, but that needed to be maintained to pay miners later during unlucky periods (or something like that). The takeaway is that distributing the excess like this meant that the internal accounting of the pool was out of wack, and meant it was insolvent. I learned a valuable lesson about handling atomic, irreversible events and DB synchronization; and I'm glad it happened early in my career and not in a high-stakes situation.
+
+##### Marketcoin, Ethereum, Eudemonia, The Grachten, Quanta (May 2013 to August 2014)
+
+I tried to launch a [distributed-exchange blockchain -- *Marketcoin* -- in May 2013](https://github.com/XertroV/MarketcoinWhitepaper). The architecture is still workable and better (higher capacity, lower fee) than the "DEX"s around today (like Uniswap/Balancer). In Dec 2013 -> Feb/March 2014 I worked with the Ethereum team doing self-direct work around smart contracts and wrote [(to my knowledge) the first smart contract testing framework](https://github.com/xertrov/coppr) alongside a test implementation of Marketcoin's [price matching and escrow engine](https://github.com/XertroV/coppr/blob/master/marketcoin.py) and a precursor to BTC Relay comprised of 3 contracts: [CHAINHEADERS](https://github.com/XertroV/coppr/blob/master/chainheaders.py) (for Bitcoin's headers-only consensus), [MERKLETRACKER](https://github.com/XertroV/coppr/blob/master/merkletracker.py), and [SPV](https://github.com/XertroV/coppr/blob/master/spv.py). To be clear: if the design of Ethereum smart contracts (and tooling around their authorship) had not changed significantly before launch, this is probably the earliest near-functional decentralized, cross-chain exchange.
+
+In April-July 2014, a friend and I started a short-lived project, [Eudemonia Research](https://github.com/eudemonia-research/), where I [returned to Marketcoin](https://bitcointalk.org/index.php?topic=598784.msg6588004;topicseen#msg6588004) and wrote, from scratch, a blockchain framework for fast development of custom blockchains: [Cryptonet](https://github.com/eudemonia-research/cryptonet/blob/master/cryptonet/chain.py). It's like [Parity's Substrate](https://github.com/paritytech/substrate/commit/0d26ee79a820647ef6abcc999c9f65763e3d1ef7), except [1,316](https://www.google.com/search?client=firefox-b-d&q=days+between+april+1+2014+and+Nov+7+2017) days older, written in Python, and dead. I used cryptonet for some other important prototypes, too.
+
+One was [The Grachten](https://github.com/eudemonia-research/cryptonet/blob/master/examples/grachten.py) (originally [GPDHT](https://github.com/XertroV/gpdht)), an early implementation of a blockchain scalability soln based on merged-mining and something like pseudo-sharding. It later went on to be refined and coined [a microchain by [Gav Wood](https://www.youtube.com/watch?v=o6D8Up411dI&t=1756s). When [Gav Wood said](https://github.com/polkadot-io/polkadot-white-paper/blob/5a3f902bda34fe309251edeb9b6382154fc26680/PolkaDotPaper.tex#L155) the following, he was talking about our conversation about this idea. 
+
+> Decoupling the underlying consensus from the state-transition has been informally proposed in private for at least two years---Max Kaye was a proponent of such a strategy during the very early days of Ethereum.
+
+Another important prototype I built using cryptonet was [Quanta](https://github.com/XertroV/quanta-test/blob/master/quanta.py) -- which is the world's first implementation of the generalization of Nakamoto consensus to a DAG that is capable of merging histories from multiple parents. The method I created for Quanta was independently discovered a year later by [Yoad Lewenberg, Yonatan Sompolinsky, and Aviv Zohar in *Inclusive Block Chain Protocols*](https://www.avivz.net/pubs/15/inclusive_btc_full.pdf).
+
+---------------
 
 All content is on GitHub: [https://github.com/xk-io/xk-io.github.io](https://github.com/xk-io/xk-io.github.io).
-
-#### Site
-
-This Jekyll theme was crafted with <3 by [John Otander](http://johnotander.com)
-([@4lpine](https://twitter.com/4lpine)).
-
-Checkout the [Github repository](https://github.com/johnotander/pixyll) to download it,
-request a feature, report a bug, or contribute. It's free, and open source
-([MIT](http://opensource.org/licenses/MIT)).
