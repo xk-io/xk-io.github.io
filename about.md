@@ -18,7 +18,7 @@ I am very comfortable learning new languages, frameworks, toolkits, etc. I have 
 
 I contributed an in-depth chapter to [Data61's *Architecture for Blockchain Applications* textbook](https://link.springer.com/chapter/10.1007/978-3-030-03035-3_13) about the smart contract architecture that I used for SecureVote's backend.
 
-My two most well-known past projects are likely [Flux] and [SecureVote].
+My two most well-known past projects are likely [Flux](https://voteflux.org) and [SecureVote](https://secure.vote).
 
 Flux is a political party I founded in 2015 to introduce better methods of doing democracy. Particularly, I invented a new way to do democracy -- *Issue Based Digital Democracy* (IBDD) -- built around foundational concepts from epistemology and free market economics such as error correction, cycles of conjecture and criticism, specialization and trade, division of labor, comparative advantage, and arbitrage. Flux ran in state and federal elections (in Australia) in 2016, 2017, 2019, and 2020.
 
